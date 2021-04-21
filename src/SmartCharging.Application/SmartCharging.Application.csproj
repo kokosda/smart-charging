@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartCharging.Domain\SmartCharging.Domain.csproj" />
+    <ProjectReference Include="..\SmartCharging.Infrastructure\SmartCharging.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
