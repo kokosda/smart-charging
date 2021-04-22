@@ -1,4 +1,4 @@
-﻿namespace SmartCharging.Core
+﻿namespace SmartCharging.Core.Entities
 {
 	public abstract class EntityBase<TId>
 	{

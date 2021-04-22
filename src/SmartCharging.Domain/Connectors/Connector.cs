@@ -1,4 +1,5 @@
 ﻿using SmartCharging.Core;
+using SmartCharging.Core.Entities;
 using SmartCharging.Domain.ChargeStations;
 using SmartCharging.Domain.Exceptions;
 

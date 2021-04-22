@@ -6,7 +6,7 @@ using SmartCharging.Domain.Connectors;
 
 namespace SmartCharging.Infrastructure.Domain
 {
-	public class ConnectorRepository : IConnectorRepository
+	public sealed class ConnectorRepository : IConnectorRepository
 	{
 		private readonly ISqlConnectionFactory sqlConnectionFactory;
 

@@ -17,7 +17,7 @@ namespace SmartCharging.Infrastructure.Database
 
 		public IDbConnection GetOpenConnection()
 		{
-			if (connection == null || connection.State != ConnectionState.Open)
+			if (connection is not { State: ConnectionState.Open })
 			{
 				connection = new SqlConnection(connectionString);
 				connection.Open();
@@ -28,7 +28,7 @@ namespace SmartCharging.Infrastructure.Database
 
 		public void Dispose()
 		{
-			if (connection != null && connection.State == ConnectionState.Open)
+			if (connection is { State: ConnectionState.Open })
 			{
 				connection.Dispose();
 			}

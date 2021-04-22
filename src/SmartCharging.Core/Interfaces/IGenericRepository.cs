@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using SmartCharging.Core.Entities;
 
 namespace SmartCharging.Core.Interfaces
 {
