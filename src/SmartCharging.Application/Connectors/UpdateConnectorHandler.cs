@@ -10,12 +10,10 @@ namespace SmartCharging.Application.Connectors
 	{
 		private static readonly ILog Log = LogManager.GetLogger(nameof(UpdateConnectorHandler));
 		private readonly IConnectorRepository connectorRepository;
-		private readonly IGenericRepository<Connector, int> genericRepository;
 
-		public UpdateConnectorHandler(IConnectorRepository connectorRepository, IGenericRepository<Connector, int> genericRepository)
+		public UpdateConnectorHandler(IConnectorRepository connectorRepository)
 		{
 			this.connectorRepository = connectorRepository ?? throw new ArgumentNullException(nameof(connectorRepository));
-			this.genericRepository = genericRepository ?? throw new ArgumentNullException(nameof(genericRepository));
 		}
 
 		public async Task UpdateMaxCurrentAsync(UpdateConnectorRequest request)
@@ -31,7 +29,7 @@ namespace SmartCharging.Application.Connectors
 			var previousValue = connector.MaxCurrentInAmps;
 			connector.UpdateMaxCurrrentInAmps(request.MaxCurrentInAmps);
 
-			await genericRepository.UpdateAsync(connector);
+			await connectorRepository.UpdateAsync(connector);
 
 			Log.LogInfo($"Connector with ID={connector.GetNumericId()} is updated with new value {request.MaxCurrentInAmps}, previous value was {previousValue}.");
 		}

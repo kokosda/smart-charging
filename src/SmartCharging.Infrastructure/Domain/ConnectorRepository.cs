@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Dapper;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Domain.Connectors;
+using SmartCharging.Infrastructure.Database;
 
 namespace SmartCharging.Infrastructure.Domain
 {
-	public sealed class ConnectorRepository : IConnectorRepository
+	public sealed class ConnectorRepository : GenericRepository<Connector, int>, IConnectorRepository
 	{
 		private readonly ISqlConnectionFactory sqlConnectionFactory;
 

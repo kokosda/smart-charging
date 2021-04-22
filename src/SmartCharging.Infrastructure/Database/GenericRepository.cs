@@ -9,7 +9,7 @@ using SmartCharging.Core.Interfaces;
 
 namespace SmartCharging.Infrastructure.Database
 {
-	public sealed class GenericRepository<T, TId> : IGenericRepository<T, TId> where T: EntityBase<TId>
+	public class GenericRepository<T, TId> : IGenericRepository<T, TId> where T: EntityBase<TId>
 	{
 		private readonly ISqlConnectionFactory factory;
 
