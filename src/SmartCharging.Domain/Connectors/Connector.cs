@@ -10,7 +10,7 @@ namespace SmartCharging.Domain.Connectors
 		private decimal maxCurrentInAmps;
 
 		public int LineNo { get; init; }
-		public ChargeStation ChargeStation { get; init; }
+		public int ChargeStationId { get; init; }
 		public decimal MaxCurrentInAmps 
 		{ 
 			get => maxCurrentInAmps; 
@@ -27,7 +27,7 @@ namespace SmartCharging.Domain.Connectors
 
 		public string GetNumericId()
 		{
-			var result = $"{ChargeStation.Id}-{LineNo}";
+			var result = $"{ChargeStationId}-{LineNo}";
 			return result;
 		}
 	}

@@ -9,10 +9,12 @@ namespace SmartCharging.Application.Connectors
 	public sealed class UpdateConnectorHandler : IUpdateConnectorHandler
 	{
 		private static readonly ILog Log = LogManager.GetLogger(nameof(UpdateConnectorHandler));
+		private readonly IConnectorRepository connectorRepository;
 		private readonly IGenericRepository<Connector, int> genericRepository;
 
-		public UpdateConnectorHandler(IGenericRepository<Connector, int> genericRepository)
+		public UpdateConnectorHandler(IConnectorRepository connectorRepository, IGenericRepository<Connector, int> genericRepository)
 		{
+			this.connectorRepository = connectorRepository ?? throw new ArgumentNullException(nameof(connectorRepository));
 			this.genericRepository = genericRepository ?? throw new ArgumentNullException(nameof(genericRepository));
 		}
 
@@ -21,13 +23,15 @@ namespace SmartCharging.Application.Connectors
 			if (request is null)
 				throw new ArgumentNullException(nameof(request));
 
-			var connector = await genericRepository.GetAsync(request.ChargeStationId);
+			var connector = await connectorRepository.GetByChargeStationIdAndLineNo(request.ChargeStationId, request.LineNo);
 
 			if (connector is null)
 				throw new NullReferenceException($"Connector with ID={request.ChargeStationId} is not found.");
 
 			var previousValue = connector.MaxCurrentInAmps;
 			connector.UpdateMaxCurrrentInAmps(request.MaxCurrentInAmps);
+
+			await genericRepository.UpdateAsync(connector);
 
 			Log.LogInfo($"Connector with ID={connector.GetNumericId()} is updated with new value {request.MaxCurrentInAmps}, previous value was {previousValue}.");
 		}

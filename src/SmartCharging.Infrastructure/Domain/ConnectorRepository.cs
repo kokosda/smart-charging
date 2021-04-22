@@ -14,10 +14,10 @@ namespace SmartCharging.Infrastructure.Domain
 		{
 			this.sqlConnectionFactory = sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
 		}
-		public Task<Connector> GetByChargeStationIdAndLineNo(int chargeStationId, int lineNo)
+		public async Task<Connector> GetByChargeStationIdAndLineNo(int chargeStationId, int lineNo)
 		{
-			var sql = $"select top 1 * from Connector where chargeStationId={chargeStationId} and LineNo={lineNo}";
-			var result = sqlConnectionFactory.GetOpenConnection().QueryFirstOrDefaultAsync<Connector>(sql);
+			var sql = $"select * from Connector where chargeStationId={chargeStationId} and LineNo={lineNo};";
+			var result = await sqlConnectionFactory.GetOpenConnection().QueryFirstOrDefaultAsync<Connector>(sql);
 			return result;
 		}
 	}

@@ -2,7 +2,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SmartCharging.Application.Connectors;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Infrastructure.Logging;
@@ -24,11 +23,10 @@ namespace SmartCharging.Api.Controllers
 		/// <summary>
 		/// Updates max current in Amp.
 		/// </summary>
-		[Route("")]
+		[Route("UpdateMaxCurrent")]
 		[HttpPost]
 		[ProducesResponseType((int)HttpStatusCode.NoContent)]
-		[ProducesResponseType(typeof(ModelStateDictionary), (int)HttpStatusCode.BadRequest)]
-		public async Task<ActionResult> UpdateMaxCurrent([FromBody] UpdateConnectorRequest request)
+		public async Task<ActionResult> UpdateMaxCurrent(UpdateConnectorRequest request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

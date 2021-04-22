@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SmartCharging.Core;
 using SmartCharging.Core.Entities;
 using SmartCharging.Domain.ChargeStations;
 
@@ -15,8 +14,8 @@ namespace SmartCharging.Domain.Groups
 			ChargeStations = new List<ChargeStation>();
 		}
 
-		public string Name { get; private set; }
-		public decimal CapacityInAmps { get; private set; }
-		public IList<ChargeStation> ChargeStations { get; private set; }
+		public string Name { get; init; }
+		public decimal CapacityInAmps { get; init; }
+		public IList<ChargeStation> ChargeStations { get; init; }
 	}
 }

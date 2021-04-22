@@ -11,7 +11,7 @@ namespace SmartCharging.Infrastructure.DependencyInjection
 		public static IServiceCollection AddInfrastructureLevelServices(this IServiceCollection serviceCollection, DependencyRegistrarContext context)
 		{
 			serviceCollection.AddSingleton<ISqlConnectionFactory>(sp => new SqlConnectionFactory(context.ConnectionString));
-			serviceCollection.AddSingleton(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+			serviceCollection.AddSingleton(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 			serviceCollection.AddSingleton<IConnectorRepository, ConnectorRepository>();
 
 			return serviceCollection;

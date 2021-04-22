@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using SmartCharging.Core.Interfaces;
 
 namespace SmartCharging.Infrastructure.Database
@@ -18,8 +18,8 @@ namespace SmartCharging.Infrastructure.Database
 		public IDbConnection GetOpenConnection()
 		{
 			if (connection is not { State: ConnectionState.Open })
-			{
-				connection = new SqlConnection(connectionString);
+			{ ;
+				connection = new SQLiteConnection(connectionString);
 				connection.Open();
 			}
 

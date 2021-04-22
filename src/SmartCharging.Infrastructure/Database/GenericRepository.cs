@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using SmartCharging.Core;
 using SmartCharging.Core.Entities;
 using SmartCharging.Core.Interfaces;
 
@@ -17,12 +15,18 @@ namespace SmartCharging.Infrastructure.Database
 
 		public GenericRepository(ISqlConnectionFactory factory)
 		{
-			factory = factory ?? throw new ArgumentNullException(nameof(factory));
+			this.factory = factory ?? throw new ArgumentNullException(nameof(factory));
 		}
 
-		public Task<T> CreateAsync(EntityBase<TId> entity)
+		public async Task<T> CreateAsync(EntityBase<TId> entity)
 		{
-			throw new NotImplementedException();
+			var columns = GetColumns();
+			var stringOfColumns = string.Join(", ", columns);
+			var stringOfParameters = string.Join(", ", columns.Select(e => "@" + e));
+			var query = $"insert into {typeof(T).Name} ({stringOfColumns}) output inserted.Id values ({stringOfParameters})";
+
+			var result = (T)await factory.GetOpenConnection().ExecuteScalarAsync(query, entity);
+			return result;
 		}
 
 		public Task<T> GetAsync(TId id)
@@ -32,22 +36,28 @@ namespace SmartCharging.Infrastructure.Database
 			return result;
 		}
 
-		public Task UpdateAsync(EntityBase<TId> entity)
+		public async Task UpdateAsync(EntityBase<TId> entity)
 		{
-			throw new NotImplementedException();
+			var columns = GetColumns();
+			var stringOfColumns = string.Join(", ", columns.Select(e => $"{e} = @{e}"));
+			var query = $"update {typeof(T).Name} set {stringOfColumns} where Id = @Id";
+
+			await factory.GetOpenConnection().ExecuteAsync(query, entity);
 		}
 
-		public Task DeleteAsync(TId id)
+		public async Task DeleteAsync(TId id)
 		{
-			throw new NotImplementedException();
+			var query = $"delete from {typeof(T).Name} where Id = @Id";
+			await factory.GetOpenConnection().ExecuteAsync(query);
 		}
 
-		private IEnumerable<string> GetColumns()
+		private IList<string> GetColumns()
 		{
 			var result = typeof(T)
 				.GetProperties()
 				.Where(e => e.Name != "Id" && !e.PropertyType.GetTypeInfo().IsGenericType)
-				.Select(e => e.Name);
+				.Select(e => e.Name)
+				.ToList();
 			return result;
 		}
 	}
