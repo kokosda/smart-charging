@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Dapper;
-using SmartCharging.Core.Entities;
+using SmartCharging.Core.Domain;
 using SmartCharging.Core.Interfaces;
 
 namespace SmartCharging.Infrastructure.Database

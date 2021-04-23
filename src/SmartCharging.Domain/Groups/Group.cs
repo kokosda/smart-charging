@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SmartCharging.Core.Entities;
+using SmartCharging.Core.Domain;
 using SmartCharging.Domain.ChargeStations;
 
 namespace SmartCharging.Domain.Groups
