@@ -7,13 +7,13 @@ using SmartCharging.Infrastructure.Database;
 
 namespace SmartCharging.Infrastructure.Domain
 {
-	public sealed class ConnectorRepository : GenericRepository<Connector, int>, IGroupRepository
+	public sealed class ConnectorRepository : GenericRepository<Connector, int>, IConnectorRepository
 	{
 		private readonly ISqlConnectionFactory sqlConnectionFactory;
 
 		public ConnectorRepository(ISqlConnectionFactory sqlConnectionFactory) : base(sqlConnectionFactory)
 		{
-			this.sqlConnectionFactory = sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
+			this.sqlConnectionFactory = sqlConnectionFactory;
 		}
 
 		public async Task<Connector> GetByChargeStationIdAndLineNo(int chargeStationId, int lineNo)

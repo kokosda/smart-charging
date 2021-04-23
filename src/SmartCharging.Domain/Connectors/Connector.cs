@@ -1,7 +1,6 @@
-﻿using SmartCharging.Core;
-using SmartCharging.Core.Domain;
-using SmartCharging.Domain.ChargeStations;
-using SmartCharging.Domain.Exceptions;
+﻿using SmartCharging.Core.Domain;
+using SmartCharging.Core.Interfaces;
+using System.Threading.Tasks;
 
 namespace SmartCharging.Domain.Connectors
 {
@@ -17,12 +16,14 @@ namespace SmartCharging.Domain.Connectors
 			init => maxCurrentInAmps = value; 
 		}
 
-		public void UpdateMaxCurrrentInAmps(decimal value)
+		public async Task<IResponseContainer> UpdateMaxCurrrentInAmps(decimal value, IGroupRepository groupRepository)
 		{
-			if (value <= 0)
-				throw new BusinessRuleException($"Current can not be less than or equal to 0. Provided value is {value}.");
+			var result = await new UpdateConnectorMaxCurrentSpecification(value, groupRepository).IsSatisfiedBy(this);
 
-			maxCurrentInAmps = value;
+			if (result.IsSuccess)
+				maxCurrentInAmps = value;
+
+			return result;
 		}
 
 		public string GetNumericId()

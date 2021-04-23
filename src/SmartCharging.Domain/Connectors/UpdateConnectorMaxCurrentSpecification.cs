@@ -24,10 +24,21 @@ namespace SmartCharging.Domain.Connectors
 
 			var result = new ResponseContainer();
 
+			if (connector.MaxCurrentInAmps == current)
+			{
+				result.AddErrorMessage($"Connector's [{connector.GetNumericId()}] current is equal to provided one ({current}).");
+				return result;
+			}
+
 			if (current <= 0)
 				result.AddErrorMessage($"Connector's [{connector.GetNumericId()}] current can not be a value less than or equal to 0. Value provided: {current}.");
+			else
+			{
+				var group = await groupRepository.GetByConnector(connector);
+				var responseContainer = await new UpdateGroupCurrentSpecification(current, connector).IsSatisfiedBy(group);
 
-			var group = await groupRepository.GetByConnector(connector);
+				result = result.JoinWith(responseContainer);
+			}
 
 			return result;
 		}

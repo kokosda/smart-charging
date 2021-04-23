@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using SmartCharging.Core.Interfaces;
+using System.Threading.Tasks;
 
 namespace SmartCharging.Application.Connectors
 {
 	public interface IUpdateConnectorHandler
 	{
-		Task UpdateMaxCurrentAsync(UpdateConnectorRequest request);
+		Task<IResponseContainer> UpdateMaxCurrentAsync(UpdateConnectorRequest request);
 	}
 }

@@ -7,6 +7,10 @@ namespace SmartCharging.Domain.Groups
 {
 	public sealed class Group : EntityBase<int>
 	{
+		public Group()
+		{
+		}
+
 		public Group(string name, decimal capacityInAmps)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));

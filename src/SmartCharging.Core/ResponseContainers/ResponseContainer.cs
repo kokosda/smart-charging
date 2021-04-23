@@ -35,7 +35,7 @@ namespace SmartCharging.Core.ResponseContainers
 			isSuccess = false;
 		}
 
-		public IResponseContainer JoinWith(IResponseContainer anotherResponseContainer)
+		public ResponseContainer JoinWith(IResponseContainer anotherResponseContainer)
 		{
 			var result = new ResponseContainer
 			{
@@ -43,9 +43,14 @@ namespace SmartCharging.Core.ResponseContainers
 			};
 
 			result.MessagesList.AddRange(MessagesList);
-			MessagesList.Add(anotherResponseContainer.Messages);
+			result.MessagesList.Add(anotherResponseContainer.Messages);
 
 			return result;
+		}
+
+		public IResponseContainer AsInterface()
+		{
+			return this;
 		}
 	}
 }

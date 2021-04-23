@@ -31,7 +31,13 @@ namespace SmartCharging.Api.Controllers
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			await updateConnectorHandler.UpdateMaxCurrentAsync(request);
+			var result = await updateConnectorHandler.UpdateMaxCurrentAsync(request);
+
+			if (!result.IsSuccess)
+			{
+				ModelState.AddModelError(string.Empty, result.Messages);
+				return BadRequest(ModelState);
+			}
 
 			return NoContent();
 		}

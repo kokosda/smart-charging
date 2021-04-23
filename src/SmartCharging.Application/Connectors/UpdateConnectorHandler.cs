@@ -9,14 +9,16 @@ namespace SmartCharging.Application.Connectors
 	public sealed class UpdateConnectorHandler : IUpdateConnectorHandler
 	{
 		private static readonly ILog Log = LogManager.GetLogger(nameof(UpdateConnectorHandler));
-		private readonly IGroupRepository connectorRepository;
+		private readonly IConnectorRepository connectorRepository;
+		private readonly IGroupRepository groupRepository;
 
-		public UpdateConnectorHandler(IGroupRepository connectorRepository)
+		public UpdateConnectorHandler(IConnectorRepository connectorRepository, IGroupRepository groupRepository)
 		{
 			this.connectorRepository = connectorRepository ?? throw new ArgumentNullException(nameof(connectorRepository));
+			this.groupRepository = groupRepository ?? throw new ArgumentNullException(nameof(groupRepository));
 		}
 
-		public async Task UpdateMaxCurrentAsync(UpdateConnectorRequest request)
+		public async Task<IResponseContainer> UpdateMaxCurrentAsync(UpdateConnectorRequest request)
 		{
 			if (request is null)
 				throw new ArgumentNullException(nameof(request));
@@ -27,11 +29,17 @@ namespace SmartCharging.Application.Connectors
 				throw new NullReferenceException($"Connector with ID={request.ChargeStationId} is not found.");
 
 			var previousValue = connector.MaxCurrentInAmps;
-			connector.UpdateMaxCurrrentInAmps(request.MaxCurrentInAmps);
+			var result = await connector.UpdateMaxCurrrentInAmps(request.MaxCurrentInAmps, groupRepository);
 
-			await connectorRepository.UpdateAsync(connector);
+			if (result.IsSuccess)
+			{
+				await connectorRepository.UpdateAsync(connector);
+				Log.LogInfo($"Connector with ID={connector.GetNumericId()} is updated with new value {request.MaxCurrentInAmps}, previous value was {previousValue}.");
+			}
+			else
+				Log.LogError(result.Messages);
 
-			Log.LogInfo($"Connector with ID={connector.GetNumericId()} is updated with new value {request.MaxCurrentInAmps}, previous value was {previousValue}.");
+			return result;
 		}
 	}
 }
