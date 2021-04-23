@@ -11,10 +11,11 @@ namespace SmartCharging.Infrastructure.Domain
 	{
 		private readonly ISqlConnectionFactory sqlConnectionFactory;
 
-		public ConnectorRepository(ISqlConnectionFactory sqlConnectionFactory)
+		public ConnectorRepository(ISqlConnectionFactory sqlConnectionFactory) : base(sqlConnectionFactory)
 		{
 			this.sqlConnectionFactory = sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
 		}
+
 		public async Task<Connector> GetByChargeStationIdAndLineNo(int chargeStationId, int lineNo)
 		{
 			var sql = $"select * from Connector where chargeStationId={chargeStationId} and LineNo={lineNo};";

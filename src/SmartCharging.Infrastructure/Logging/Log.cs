@@ -1,60 +1,49 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using SmartCharging.Core.Interfaces;
+using ILog4Net = log4net.ILog;
 
 namespace SmartCharging.Infrastructure.Logging
 {
 	public sealed class Log : ILog
 	{
-		private readonly ILogger logger;
+		private readonly ILog4Net log;
 
-		public Log(ILogger logger)
+		public Log(ILog4Net log)
 		{
-			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			this.log = log ?? throw new ArgumentNullException(nameof(log));
 		}
 
 		public void LogDebug(string message, Exception exception = null)
 		{
-			if (!logger.IsEnabled(LogLevel.Debug))
+			if (!log.IsDebugEnabled)
 				return;
 
-			if (exception is null)
-				logger.LogDebug(message);
-			else
-				logger.LogDebug(exception, message);
+			log.Debug(message, exception);
 		}
 
 		public void LogError(string message, Exception exception = null)
 		{
-			if (!logger.IsEnabled(LogLevel.Error))
+			if (!log.IsErrorEnabled)
 				return;
 
-			if (exception is null)
-				logger.LogError(message);
-			else
-				logger.LogError(exception, message);
+			log.Error(message, exception);
 		}
 
 		public void LogInfo(string message, Exception exception = null)
 		{
-			if (!logger.IsEnabled(LogLevel.Information))
+			if (!log.IsInfoEnabled)
 				return;
 
-			if (exception is null)
-				logger.LogInformation(message);
-			else
-				logger.LogInformation(exception, message);
+			log.Info(message, exception);
 		}
 
 		public void LogWarn(string message, Exception exception = null)
 		{
-			if (!logger.IsEnabled(LogLevel.Warning))
+			if (!log.IsWarnEnabled)
 				return;
 
-			if (exception is null)
-				logger.LogWarning(message);
-			else
-				logger.LogWarning(exception, message);
+			log.Warn(message, exception);
 		}
 	}
 }

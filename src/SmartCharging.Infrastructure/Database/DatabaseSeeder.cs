@@ -3,17 +3,21 @@ using System.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using SmartCharging.Core.Interfaces;
+using SmartCharging.Infrastructure.Logging;
 
 namespace SmartCharging.Infrastructure.Database
 {
 	public static class DatabaseSeeder
 	{
+		private static readonly ILog Log = LogManager.GetLogger(nameof(DatabaseSeeder));
+
 		public static IApplicationBuilder UseDatabase(this IApplicationBuilder app)
 		{
 			var factory = app.ApplicationServices.GetService<ISqlConnectionFactory>() ?? throw new NullReferenceException("SQL connection factory is not registered.");
 
 			var connection = factory.GetOpenConnection();
 			Seed(connection);
+			Log.LogInfo("Database seeded.");
 			return app;
 		}
 

@@ -14,4 +14,10 @@
     <ProjectReference Include="..\SmartCharging.Infrastructure\SmartCharging.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
