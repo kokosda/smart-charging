@@ -9,9 +9,9 @@ namespace SmartCharging.Application.Connectors
 	public sealed class UpdateConnectorHandler : IUpdateConnectorHandler
 	{
 		private static readonly ILog Log = LogManager.GetLogger(nameof(UpdateConnectorHandler));
-		private readonly IConnectorRepository connectorRepository;
+		private readonly IGroupRepository connectorRepository;
 
-		public UpdateConnectorHandler(IConnectorRepository connectorRepository)
+		public UpdateConnectorHandler(IGroupRepository connectorRepository)
 		{
 			this.connectorRepository = connectorRepository ?? throw new ArgumentNullException(nameof(connectorRepository));
 		}

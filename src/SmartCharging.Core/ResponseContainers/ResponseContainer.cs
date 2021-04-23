@@ -1,9 +1,6 @@
-﻿using System;
+﻿using SmartCharging.Core.Interfaces;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SmartCharging.Core.Interfaces;
 
 namespace SmartCharging.Core.ResponseContainers
 {
@@ -24,6 +21,7 @@ namespace SmartCharging.Core.ResponseContainers
 		public ResponseContainer()
 		{
 			MessagesList = new List<string>();
+			IsSuccess = true;
 		}
 
 		public void AddMessage(string message)
@@ -35,6 +33,19 @@ namespace SmartCharging.Core.ResponseContainers
 		{
 			AddMessage(message);
 			isSuccess = false;
+		}
+
+		public IResponseContainer JoinWith(IResponseContainer anotherResponseContainer)
+		{
+			var result = new ResponseContainer
+			{
+				IsSuccess = IsSuccess && anotherResponseContainer.IsSuccess
+			};
+
+			result.MessagesList.AddRange(MessagesList);
+			MessagesList.Add(anotherResponseContainer.Messages);
+
+			return result;
 		}
 	}
 }

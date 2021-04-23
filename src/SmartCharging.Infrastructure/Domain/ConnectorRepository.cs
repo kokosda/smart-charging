@@ -7,7 +7,7 @@ using SmartCharging.Infrastructure.Database;
 
 namespace SmartCharging.Infrastructure.Domain
 {
-	public sealed class ConnectorRepository : GenericRepository<Connector, int>, IConnectorRepository
+	public sealed class ConnectorRepository : GenericRepository<Connector, int>, IGroupRepository
 	{
 		private readonly ISqlConnectionFactory sqlConnectionFactory;
 
