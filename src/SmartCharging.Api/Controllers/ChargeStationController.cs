@@ -8,11 +8,11 @@ namespace SmartCharging.Api.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public sealed class ConnectorController : ControllerBase
+	public sealed class ChargeStationController : ControllerBase
 	{
 		private readonly IUpdateConnectorHandler updateConnectorHandler;
 
-		public ConnectorController(IUpdateConnectorHandler updateConnectorHandler)
+		public ChargeStationController(IUpdateConnectorHandler updateConnectorHandler)
 		{
 			this.updateConnectorHandler = updateConnectorHandler ?? throw new ArgumentNullException(nameof(updateConnectorHandler));
 		}
@@ -20,10 +20,10 @@ namespace SmartCharging.Api.Controllers
 		/// <summary>
 		/// Updates max current in Amp.
 		/// </summary>
-		[Route("UpdateMaxCurrent")]
+		[Route("")]
 		[HttpPost]
 		[ProducesResponseType((int)HttpStatusCode.NoContent)]
-		public async Task<ActionResult> UpdateMaxCurrent(UpdateConnectorRequest request)
+		public async Task<ActionResult> Create(UpdateConnectorRequest request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

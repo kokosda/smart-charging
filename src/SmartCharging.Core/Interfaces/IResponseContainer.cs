@@ -4,5 +4,9 @@
 	{
 		bool IsSuccess { get; }
 		string Messages { get; }
+
+		void AddMessage(string message);
+		void AddErrorMessage(string message);
+		IResponseContainer JoinWith(ref IResponseContainer anotherResponseContainer);
 	}
 }
