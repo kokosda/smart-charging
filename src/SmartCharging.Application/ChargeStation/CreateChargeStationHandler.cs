@@ -9,32 +9,45 @@ using SmartCharging.Infrastructure.Logging;
 
 namespace SmartCharging.Application.Connectors
 {
-	public sealed class CreateChargeStationHandler : CommandHandlerBase<CreateChargeStationRequest>, ICreateChargeStationHandler
+	public sealed class CreateChargeStationHandler : GenericCommandHandlerBase<CreateChargeStationRequest, ChargeStationDto>, ICreateChargeStationHandler
 	{
 		private static readonly ILog Log = LogManager.GetLogger(nameof(CreateChargeStationHandler));
 		private readonly IGroupRepository groupRepository;
+		private readonly IGenericRepository<ChargeStation, int> chargeStationRepository;
 
-		public CreateChargeStationHandler(IGroupRepository groupRepository)
+		public CreateChargeStationHandler(IGroupRepository groupRepository, IGenericRepository<ChargeStation, int> chargeStationRepository)
 		{
-			this.groupRepository = groupRepository ?? throw new ArgumentNullException(nameof(groupRepository));
+			this.groupRepository = groupRepository;
+			this.chargeStationRepository = chargeStationRepository;
 		}
 
-		protected override async Task<IResponseContainer> GetResultAsync(CreateChargeStationRequest request)
+		protected override async Task<IResponseContainerWithValue<ChargeStationDto>> GetResultAsync(CreateChargeStationRequest request)
 		{
 			if (request is null)
 				throw new ArgumentNullException(nameof(request));
 
-			var result = new ResponseContainer();
+			var result = new ResponseContainerWithValue<ChargeStationDto>();
 			var group = await groupRepository.GetAsync(request.GroupId);
 
 			if (group is null)
 			{
 				result.AddErrorMessage($"Group with ID={request.GroupId} is not found.");
-				Log.LogError(result.Messages);
+				Log.Error(result.Messages);
 				return result;
 			}
 
-			ChargeStation.
+			var chargeStationResponseContainer = ChargeStation.Create(group, request.Name);
+
+			if (!chargeStationResponseContainer.IsSuccess)
+			{
+				result.JoinWith(chargeStationResponseContainer);
+				Log.Error(result.Messages);
+				return result;
+			}
+
+			var chargeStation = await chargeStationRepository.CreateAsync(chargeStationResponseContainer.Value);
+			result = new ResponseContainerWithValue<ChargeStationDto> { Value = ChargeStationDto.From(chargeStation) };
+			return result;
 		}
 	}
 }

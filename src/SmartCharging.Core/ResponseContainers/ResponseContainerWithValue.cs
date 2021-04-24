@@ -1,5 +1,4 @@
 ﻿using SmartCharging.Core.Interfaces;
-using System;
 
 namespace SmartCharging.Core.ResponseContainers
 {
@@ -7,13 +6,14 @@ namespace SmartCharging.Core.ResponseContainers
 	{
 		public T Value { get; init; }
 
-		public ResponseContainerWithValue(ResponseContainer anotherResponseContainer)
+		public ResponseContainerWithValue()
 		{
-			if (anotherResponseContainer is null)
-				throw new ArgumentNullException(nameof(anotherResponseContainer));
+		}
 
-			IsSuccess = anotherResponseContainer.IsSuccess;
-			AddMessage(anotherResponseContainer.Messages);
+		public new IResponseContainerWithValue<T> JoinWith(IResponseContainer anotherResponseContainer)
+		{
+			base.JoinWith(anotherResponseContainer);
+			return this;
 		}
 	}
 }

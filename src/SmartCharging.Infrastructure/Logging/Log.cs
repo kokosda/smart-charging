@@ -14,7 +14,7 @@ namespace SmartCharging.Infrastructure.Logging
 			this.log = log ?? throw new ArgumentNullException(nameof(log));
 		}
 
-		public void LogDebug(string message, Exception exception = null)
+		public void Debug(string message, Exception exception = null)
 		{
 			if (!log.IsDebugEnabled)
 				return;
@@ -22,7 +22,7 @@ namespace SmartCharging.Infrastructure.Logging
 			log.Debug(message, exception);
 		}
 
-		public void LogError(string message, Exception exception = null)
+		public void Error(string message, Exception exception = null)
 		{
 			if (!log.IsErrorEnabled)
 				return;
@@ -30,7 +30,7 @@ namespace SmartCharging.Infrastructure.Logging
 			log.Error(message, exception);
 		}
 
-		public void LogInfo(string message, Exception exception = null)
+		public void Info(string message, Exception exception = null)
 		{
 			if (!log.IsInfoEnabled)
 				return;
@@ -38,7 +38,7 @@ namespace SmartCharging.Infrastructure.Logging
 			log.Info(message, exception);
 		}
 
-		public void LogWarn(string message, Exception exception = null)
+		public void Warn(string message, Exception exception = null)
 		{
 			if (!log.IsWarnEnabled)
 				return;

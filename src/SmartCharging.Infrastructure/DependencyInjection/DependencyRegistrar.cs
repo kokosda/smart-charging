@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SmartCharging.Core.Interfaces;
+using SmartCharging.Domain.ChargeStations;
 using SmartCharging.Domain.Connectors;
+using SmartCharging.Domain.Groups;
 using SmartCharging.Infrastructure.Database;
 using SmartCharging.Infrastructure.Domain;
 

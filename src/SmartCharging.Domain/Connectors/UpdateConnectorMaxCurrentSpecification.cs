@@ -37,7 +37,7 @@ namespace SmartCharging.Domain.Connectors
 				var group = await groupRepository.GetByConnector(connector);
 				var responseContainer = await new UpdateGroupCurrentSpecification(current, connector).IsSatisfiedBy(group);
 
-				result = result.JoinWith(responseContainer);
+				result.JoinWith(responseContainer);
 			}
 
 			return result;

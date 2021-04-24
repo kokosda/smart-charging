@@ -23,16 +23,23 @@ namespace SmartCharging.Infrastructure.Database
 			var columns = GetColumns();
 			var stringOfColumns = string.Join(", ", columns);
 			var stringOfParameters = string.Join(", ", columns.Select(e => "@" + e));
-			var query = $"insert into {typeof(T).Name} ({stringOfColumns}) output inserted.Id values ({stringOfParameters})";
+			var query = @$"
+insert into [{typeof(T).Name}] ({stringOfColumns}) 
+values ({stringOfParameters});
 
-			var result = (T)await factory.GetOpenConnection().ExecuteScalarAsync(query, entity);
+select *
+from [{typeof(T).Name}]
+where Id = last_insert_rowid();
+";
+
+			var result = await factory.GetOpenConnection().QuerySingleAsync<T>(query, entity);
 			return result;
 		}
 
-		public Task<T> GetAsync(TId id)
+		public async Task<T> GetAsync(TId id)
 		{
-			var sql = $"select * from {typeof(T).Name} where Id={id}";
-			var result = factory.GetOpenConnection().QueryFirstOrDefaultAsync<T>(sql);
+			var sql = $"select * from [{typeof(T).Name}] where Id={id}";
+			var result = await factory.GetOpenConnection().QueryFirstOrDefaultAsync<T>(sql);
 			return result;
 		}
 
@@ -40,14 +47,14 @@ namespace SmartCharging.Infrastructure.Database
 		{
 			var columns = GetColumns();
 			var stringOfColumns = string.Join(", ", columns.Select(e => $"{e} = @{e}"));
-			var query = $"update {typeof(T).Name} set {stringOfColumns} where Id = @Id";
+			var query = $"update [{typeof(T).Name}] set {stringOfColumns} where Id = @Id";
 
 			await factory.GetOpenConnection().ExecuteAsync(query, entity);
 		}
 
 		public async Task DeleteAsync(TId id)
 		{
-			var query = $"delete from {typeof(T).Name} where Id = @Id";
+			var query = $"delete from [{typeof(T).Name}] where Id = @Id";
 			await factory.GetOpenConnection().ExecuteAsync(query);
 		}
 

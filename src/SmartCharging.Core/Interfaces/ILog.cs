@@ -4,9 +4,9 @@ namespace SmartCharging.Core.Interfaces
 {
 	public interface ILog
 	{
-		void LogDebug(string message, Exception exception = null);
-		void LogInfo(string message, Exception exception = null);
-		void LogWarn(string message, Exception exception = null);
-		void LogError(string message, Exception exception = null);
+		void Debug(string message, Exception exception = null);
+		void Info(string message, Exception exception = null);
+		void Warn(string message, Exception exception = null);
+		void Error(string message, Exception exception = null);
 	}
 }

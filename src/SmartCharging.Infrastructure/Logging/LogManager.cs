@@ -17,7 +17,7 @@ namespace SmartCharging.Infrastructure.Logging
 		{
 			var logRepository = LogManagerLog4Net.GetRepository(Assembly.GetEntryAssembly());
 			XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-			Log.LogInfo("Logging configured.");
+			Log.Info("Logging configured.");
 			return app;
 		}
 	}

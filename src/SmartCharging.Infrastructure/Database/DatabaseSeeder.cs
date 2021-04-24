@@ -17,7 +17,7 @@ namespace SmartCharging.Infrastructure.Database
 
 			var connection = factory.GetOpenConnection();
 			Seed(connection);
-			Log.LogInfo("Database seeded.");
+			Log.Info("Database seeded.");
 			return app;
 		}
 

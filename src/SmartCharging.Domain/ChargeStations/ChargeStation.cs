@@ -11,17 +11,17 @@ namespace SmartCharging.Domain.ChargeStations
 {
 	public sealed class ChargeStation : EntityBase<int>
 	{
-		private List<Connector> connectors;
+		private readonly List<Connector> connectors;
 
 		public ChargeStation()
 		{
+			connectors = new List<Connector>();
 		}
 
-		public ChargeStation(string name, int groupId)
+		private ChargeStation(string name, int groupId) : this()
 		{
-			Name = name ?? throw new ArgumentNullException(nameof(name));
+			Name = name;
 			GroupId = groupId;
-			connectors = new List<Connector>();
 		}
 
 		public string Name { get; init; }
@@ -33,19 +33,13 @@ namespace SmartCharging.Domain.ChargeStations
 			if (group is null)
 				throw new ArgumentNullException(nameof(group));
 
-			var result = new ResponseContainerWithValue<ChargeStation>();
+			IResponseContainerWithValue<ChargeStation> result;
 			var nameSpecificationResponseContainer = new NameSpecification().IsSatisfiedBy(name).Result;
 
 			if (!nameSpecificationResponseContainer.IsSuccess)
-			{
-				nameSpecificationResponseContainer.
-				return result;
-			};
-
-			var result = new ResponseContainerWithValue<ChargeStation>
-			{
-				Value = new ChargeStation(name, group.Id)
-			};
+				result = new ResponseContainerWithValue<ChargeStation>().JoinWith(nameSpecificationResponseContainer);
+			else
+				result = new ResponseContainerWithValue<ChargeStation> { Value = new ChargeStation(name, group.Id) };
 
 			return result;
 		}

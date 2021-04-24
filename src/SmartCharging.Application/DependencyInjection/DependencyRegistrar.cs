@@ -8,6 +8,7 @@ namespace SmartCharging.Application.DependencyInjection
 		public static IServiceCollection AddApplicationLevelServices(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddSingleton<IUpdateMaxCurrentConnectorHandler, UpdateMaxCurrentConnectorHandler>();
+			serviceCollection.AddSingleton<ICreateChargeStationHandler, CreateChargeStationHandler>();
 			return serviceCollection;
 		}
 	}

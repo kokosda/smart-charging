@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartCharging.Application.Connectors;
@@ -22,13 +21,13 @@ namespace SmartCharging.Api.Controllers
 		/// </summary>
 		[Route("")]
 		[HttpPost]
-		[ProducesResponseType((int)HttpStatusCode.NoContent)]
+		[ProducesResponseType(typeof(ChargeStationDto), (int)HttpStatusCode.Created)]
 		public async Task<ActionResult> Create(CreateChargeStationRequest request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var result = await chargeStationHandler.HandleAsync(request);
+			var result = await chargeStationHandler.HandleWithValueAsync(request);
 
 			if (!result.IsSuccess)
 			{
@@ -36,7 +35,7 @@ namespace SmartCharging.Api.Controllers
 				return BadRequest(ModelState);
 			}
 
-			return NoContent();
+			return Created($"/{result.Value.Id}", result.Value);
 		}
 	}
 }

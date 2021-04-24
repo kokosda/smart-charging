@@ -14,7 +14,7 @@ namespace SmartCharging.Api.Controllers
 
 		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler)
 		{
-			this.updateConnectorHandler = updateConnectorHandler ?? throw new ArgumentNullException(nameof(updateConnectorHandler));
+			this.updateConnectorHandler = updateConnectorHandler;
 		}
 
 		/// <summary>

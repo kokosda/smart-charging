@@ -35,14 +35,13 @@ namespace SmartCharging.Core.ResponseContainers
 			isSuccess = false;
 		}
 
-		public IResponseContainer JoinWith(ref IResponseContainer anotherResponseContainer)
+		public IResponseContainer JoinWith(IResponseContainer anotherResponseContainer)
 		{
 			if (anotherResponseContainer is null)
 				anotherResponseContainer = new ResponseContainer();
 
-			var result = new ResponseContainer { IsSuccess = IsSuccess && anotherResponseContainer.IsSuccess };
+			isSuccess = anotherResponseContainer.IsSuccess;
 			MessagesList.Add(anotherResponseContainer.Messages);
-			anotherResponseContainer = result;
 
 			return this;
 		}

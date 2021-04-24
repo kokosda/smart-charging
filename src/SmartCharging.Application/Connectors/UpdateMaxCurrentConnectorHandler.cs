@@ -32,17 +32,18 @@ namespace SmartCharging.Application.Connectors
 				return result;
 			}
 
-			(await connector.UpdateMaxCurrrentInAmps(request.MaxCurrentInAmps, groupRepository)).JoinWith(ref result);
+			var updateResponseContainer = await connector.UpdateMaxCurrrentInAmps(request.MaxCurrentInAmps, groupRepository);
+			result.JoinWith(updateResponseContainer);
 
 			if (result.IsSuccess)
 			{
 				var previousValue = connector.MaxCurrentInAmps;
 				await connectorRepository.UpdateAsync(connector);
 
-				Log.LogInfo($"Connector with ID={connector.GetNumericId()} is updated with new value {request.MaxCurrentInAmps}, previous value was {previousValue}.");
+				Log.Info($"Connector with ID={connector.GetNumericId()} is updated with new value {request.MaxCurrentInAmps}, previous value was {previousValue}.");
 			}
 			else
-				Log.LogError(result.Messages);
+				Log.Error(result.Messages);
 
 			return result;
 		}

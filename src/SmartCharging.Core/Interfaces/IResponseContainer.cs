@@ -7,6 +7,6 @@
 
 		void AddMessage(string message);
 		void AddErrorMessage(string message);
-		IResponseContainer JoinWith(ref IResponseContainer anotherResponseContainer);
+		IResponseContainer JoinWith(IResponseContainer anotherResponseContainer);
 	}
 }
