@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SmartCharging.Core.Domain;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Core.ResponseContainers;
 using SmartCharging.Domain.ChargeStations;
-using SmartCharging.Domain.Common;
 
 namespace SmartCharging.Domain.Groups
 {
@@ -15,31 +13,26 @@ namespace SmartCharging.Domain.Groups
 			ChargeStations = new List<ChargeStation>();
 		}
 
-		private Group(string name)
+		private Group(string name, decimal capacityInAmps) : this()
 		{
 			Name = name;
-		}
-
-		public Group(string name, decimal capacityInAmps)
-		{
-			Name = name ?? throw new ArgumentNullException(nameof(name));
-			CapacityInAmps = capacityInAmps <= 0 ? throw new ArgumentException($"Current capacity has to be not less than 0 in Amps.") : capacityInAmps;
-			ChargeStations = new List<ChargeStation>();
+			CapacityInAmps = capacityInAmps;
 		}
 
 		public string Name { get; init; }
 		public decimal CapacityInAmps { get; init; }
 		public IList<ChargeStation> ChargeStations { get; init; }
 
-		public static IResponseContainerWithValue<Group> Create(string name)
+		public static IResponseContainerWithValue<Group> Create(string name, decimal capacityInAmps)
 		{
 			IResponseContainerWithValue<Group> result;
-			var nameSpecificationResponseContainer = new NameSpecification().IsSatisfiedBy(name).Result;
+			var group = new Group(name, capacityInAmps);
+			var createGroupSpecificationResponseContainer = new CreateGroupSpecification(name, capacityInAmps).IsSatisfiedBy(group).Result;
 
-			if (!nameSpecificationResponseContainer.IsSuccess)
-				result = new ResponseContainerWithValue<Group>(). JoinWith(nameSpecificationResponseContainer);
+			if (!createGroupSpecificationResponseContainer.IsSuccess)
+				result = new ResponseContainerWithValue<Group>().JoinWith(createGroupSpecificationResponseContainer);
 			else
-				result = new ResponseContainerWithValue<Group> { Value = new Group(name) };
+				result = new ResponseContainerWithValue<Group> { Value = group };
 
 			return result;
 		}

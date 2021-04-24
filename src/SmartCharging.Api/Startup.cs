@@ -5,10 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SmartCharging.Application.DependencyInjection;
-using SmartCharging.Core.Interfaces;
 using SmartCharging.Infrastructure.Database;
-using SmartCharging.Infrastructure.Logging;
 using SmartCharging.Infrastructure.DependencyInjection;
+using SmartCharging.Infrastructure.Logging;
 
 namespace SmartCharging.Api
 {

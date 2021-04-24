@@ -1,8 +1,9 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartCharging.Application.Connectors;
+using SmartCharging.Application.GeneralRequests;
+using SmartCharging.Domain.Connectors;
 
 namespace SmartCharging.Api.Controllers
 {
@@ -11,10 +12,34 @@ namespace SmartCharging.Api.Controllers
 	public sealed class ConnectorController : ControllerBase
 	{
 		private readonly IUpdateMaxCurrentConnectorHandler updateConnectorHandler;
+		private readonly IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler;
 
-		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler)
+		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler, IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler)
 		{
 			this.updateConnectorHandler = updateConnectorHandler;
+			this.getIntIdEntityHandler = getIntIdEntityHandler;
+		}
+
+		[Route("{id}")]
+		[HttpGet]
+		[ProducesResponseType(typeof(ConnectorDto), (int)HttpStatusCode.OK)]
+		public async Task<ActionResult> Get([FromRoute] GetConnectorRequest request)
+		{
+			var command = new GetIntIdEntityCommand<Connector, ConnectorDto>()
+			{
+				DtoFactory = ConnectorDto.From,
+				Request = request
+			};
+
+			var result = await getIntIdEntityHandler.HandleWithValueAsync(command);
+
+			if (!result.IsSuccess)
+			{
+				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				return BadRequest(ModelState);
+			}
+
+			return Ok(result.Value);
 		}
 
 		/// <summary>
@@ -32,7 +57,7 @@ namespace SmartCharging.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				ModelState.AddModelError(string.Empty, result.Messages);
+				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
 				return BadRequest(ModelState);
 			}
 

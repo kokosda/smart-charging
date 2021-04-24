@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SmartCharging.Application.ChargeStations;
 using SmartCharging.Application.Connectors;
+using SmartCharging.Application.GeneralRequests;
 using SmartCharging.Application.Groups;
 
 namespace SmartCharging.Application.DependencyInjection
@@ -12,6 +13,7 @@ namespace SmartCharging.Application.DependencyInjection
 			serviceCollection.AddSingleton<IUpdateMaxCurrentConnectorHandler, UpdateMaxCurrentConnectorHandler>();
 			serviceCollection.AddSingleton<ICreateChargeStationHandler, CreateChargeStationHandler>();
 			serviceCollection.AddSingleton<ICreateGroupHandler, CreateGroupHandler>();
+			serviceCollection.AddSingleton(typeof(IGetIntIdEntityHandler<,>), typeof(GetIntIdEntityHandler<,>));
 			return serviceCollection;
 		}
 	}

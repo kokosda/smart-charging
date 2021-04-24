@@ -7,8 +7,9 @@ namespace SmartCharging.Application.Groups
 	{
 		public int Id { get; init; }
 		public string Name { get; init; }
+		public decimal CapacityInAmps { get; set; }
 
-		internal static GroupDto From(Group group)
+		public static GroupDto From(Group group)
 		{
 			if (group is null)
 				throw new ArgumentNullException(nameof(group));
@@ -16,7 +17,8 @@ namespace SmartCharging.Application.Groups
 			var result = new GroupDto
 			{
 				Id = group.Id,
-				Name = group.Name
+				Name = group.Name,
+				CapacityInAmps = group.CapacityInAmps
 			};
 			return result;
 		}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SmartCharging.Application.Handlers;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Core.ResponseContainers;
@@ -20,11 +19,8 @@ namespace SmartCharging.Application.Groups
 
 		protected override async Task<IResponseContainerWithValue<GroupDto>> GetResultAsync(CreateGroupRequest request)
 		{
-			if (request is null)
-				throw new ArgumentNullException(nameof(request));
-
 			var result = new ResponseContainerWithValue<GroupDto>();
-			var groupResponseContainer = Group.Create(request.Name);
+			var groupResponseContainer = Group.Create(request.Name, request.CapacityInAmps);
 
 			if (!groupResponseContainer.IsSuccess)
 			{

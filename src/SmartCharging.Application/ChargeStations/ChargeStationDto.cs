@@ -9,7 +9,7 @@ namespace SmartCharging.Application.ChargeStations
 		public string Name { get; init; }
 		public int GroupId { get; init; }
 
-		internal static ChargeStationDto From(ChargeStation chargeStation)
+		public static ChargeStationDto From(ChargeStation chargeStation)
 		{
 			if (chargeStation is null)
 				throw new ArgumentNullException(nameof(chargeStation));

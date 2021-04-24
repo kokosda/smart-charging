@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartCharging.Application.ChargeStations;
+using SmartCharging.Application.GeneralRequests;
+using SmartCharging.Domain.ChargeStations;
 
 namespace SmartCharging.Api.Controllers
 {
@@ -10,10 +12,34 @@ namespace SmartCharging.Api.Controllers
 	public sealed class ChargeStationController : ControllerBase
 	{
 		private readonly ICreateChargeStationHandler chargeStationHandler;
+		private readonly IGetIntIdEntityHandler<ChargeStation, ChargeStationDto> getIntIdEntityHandler;
 
-		public ChargeStationController(ICreateChargeStationHandler chargeStationHandler)
+		public ChargeStationController(ICreateChargeStationHandler chargeStationHandler, IGetIntIdEntityHandler<ChargeStation, ChargeStationDto> getIntIdEntityHandler)
 		{
 			this.chargeStationHandler = chargeStationHandler;
+			this.getIntIdEntityHandler = getIntIdEntityHandler;
+		}
+
+		[Route("{id}")]
+		[HttpGet]
+		[ProducesResponseType(typeof(ChargeStationDto), (int)HttpStatusCode.OK)]
+		public async Task<ActionResult> Get([FromRoute] GetChargeStationRequest request)
+		{
+			var command = new GetIntIdEntityCommand<ChargeStation, ChargeStationDto>()
+			{
+				DtoFactory = ChargeStationDto.From,
+				Request = request
+			};
+
+			var result = await getIntIdEntityHandler.HandleWithValueAsync(command);
+
+			if (!result.IsSuccess)
+			{
+				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				return BadRequest(ModelState);
+			}
+
+			return Ok(result.Value);
 		}
 
 		/// <summary>

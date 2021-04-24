@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "87f98300-ca54-4693-aac2-3f6b428d79cf",
+		"name": "SmartCharging",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Connector/UpdateMaxCurrent",
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n     \"ChargeStationId\": 1,\r\n     \"LineNo\": 1,\r\n     \"MaxCurrentInAmps\": 22\r\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/Connector/UpdateMaxCurrent",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"Connector",
+						"UpdateMaxCurrent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChargeStation [create]",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\": \"Station EV X\",\r\n    \"GroupId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/ChargeStation",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"ChargeStation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group [create]",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\": \"Group EV X\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/Group",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"Group"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:5001/api"
+		}
+	]
+}
