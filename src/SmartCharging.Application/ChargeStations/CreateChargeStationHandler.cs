@@ -7,7 +7,7 @@ using SmartCharging.Domain.ChargeStations;
 using SmartCharging.Domain.Groups;
 using SmartCharging.Infrastructure.Logging;
 
-namespace SmartCharging.Application.Connectors
+namespace SmartCharging.Application.ChargeStations
 {
 	public sealed class CreateChargeStationHandler : GenericCommandHandlerBase<CreateChargeStationRequest, ChargeStationDto>, ICreateChargeStationHandler
 	{

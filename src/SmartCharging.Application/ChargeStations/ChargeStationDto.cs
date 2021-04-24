@@ -1,7 +1,7 @@
 ﻿using System;
 using SmartCharging.Domain.ChargeStations;
 
-namespace SmartCharging.Application.Connectors
+namespace SmartCharging.Application.ChargeStations
 {
 	public sealed record ChargeStationDto
 	{

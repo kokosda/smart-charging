@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartCharging.Application.Connectors
+namespace SmartCharging.Application.ChargeStations
 {
 	public sealed record CreateChargeStationRequest
 	{

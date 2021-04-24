@@ -1,19 +1,19 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SmartCharging.Application.ChargeStations;
+using SmartCharging.Application.Groups;
 
 namespace SmartCharging.Api.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public sealed class ChargeStationController : ControllerBase
+	public sealed class GroupController : ControllerBase
 	{
-		private readonly ICreateChargeStationHandler chargeStationHandler;
+		private readonly ICreateGroupHandler createGroupHandler;
 
-		public ChargeStationController(ICreateChargeStationHandler chargeStationHandler)
+		public GroupController(ICreateGroupHandler createGroupHandler)
 		{
-			this.chargeStationHandler = chargeStationHandler;
+			this.createGroupHandler = createGroupHandler;
 		}
 
 		/// <summary>
@@ -21,13 +21,13 @@ namespace SmartCharging.Api.Controllers
 		/// </summary>
 		[Route("")]
 		[HttpPost]
-		[ProducesResponseType(typeof(ChargeStationDto), (int)HttpStatusCode.Created)]
-		public async Task<ActionResult> Create(CreateChargeStationRequest request)
+		[ProducesResponseType(typeof(GroupDto), (int)HttpStatusCode.Created)]
+		public async Task<ActionResult> Create(CreateGroupRequest request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var result = await chargeStationHandler.HandleWithValueAsync(request);
+			var result = await createGroupHandler.HandleWithValueAsync(request);
 
 			if (!result.IsSuccess)
 			{
