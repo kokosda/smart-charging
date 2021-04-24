@@ -10,11 +10,11 @@ namespace SmartCharging.Api.Controllers
 	[Route("api/[controller]")]
 	public sealed class ChargeStationController : ControllerBase
 	{
-		private readonly IUpdateConnectorHandler updateConnectorHandler;
+		private readonly ICreateChargeStationHandler chargeStationHandler;
 
-		public ChargeStationController(IUpdateConnectorHandler updateConnectorHandler)
+		public ChargeStationController(ICreateChargeStationHandler chargeStationHandler)
 		{
-			this.updateConnectorHandler = updateConnectorHandler ?? throw new ArgumentNullException(nameof(updateConnectorHandler));
+			this.chargeStationHandler = chargeStationHandler;
 		}
 
 		/// <summary>
@@ -23,12 +23,12 @@ namespace SmartCharging.Api.Controllers
 		[Route("")]
 		[HttpPost]
 		[ProducesResponseType((int)HttpStatusCode.NoContent)]
-		public async Task<ActionResult> Create(UpdateConnectorRequest request)
+		public async Task<ActionResult> Create(CreateChargeStationRequest request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var result = await updateConnectorHandler.UpdateMaxCurrentAsync(request);
+			var result = await chargeStationHandler.HandleAsync(request);
 
 			if (!result.IsSuccess)
 			{

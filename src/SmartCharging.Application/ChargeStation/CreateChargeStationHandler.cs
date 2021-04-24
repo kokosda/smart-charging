@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SmartCharging.Application.Handlers;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Core.ResponseContainers;
 using SmartCharging.Domain.ChargeStations;
+using SmartCharging.Domain.Groups;
 using SmartCharging.Infrastructure.Logging;
 
 namespace SmartCharging.Application.Connectors
 {
-	public sealed class CreateChargeStationHandler : ICreateChargeStationHandler
+	public sealed class CreateChargeStationHandler : CommandHandlerBase<CreateChargeStationRequest>, ICreateChargeStationHandler
 	{
 		private static readonly ILog Log = LogManager.GetLogger(nameof(CreateChargeStationHandler));
 		private readonly IGroupRepository groupRepository;
@@ -17,7 +19,7 @@ namespace SmartCharging.Application.Connectors
 			this.groupRepository = groupRepository ?? throw new ArgumentNullException(nameof(groupRepository));
 		}
 
-		public async Task<IResponseContainer> CreateChargeStationAsync(CreateChargeStationRequest request)
+		protected override async Task<IResponseContainer> GetResultAsync(CreateChargeStationRequest request)
 		{
 			if (request is null)
 				throw new ArgumentNullException(nameof(request));

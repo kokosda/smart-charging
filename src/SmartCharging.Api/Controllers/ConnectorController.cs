@@ -10,9 +10,9 @@ namespace SmartCharging.Api.Controllers
 	[Route("api/[controller]")]
 	public sealed class ConnectorController : ControllerBase
 	{
-		private readonly IUpdateConnectorHandler updateConnectorHandler;
+		private readonly IUpdateMaxCurrentConnectorHandler updateConnectorHandler;
 
-		public ConnectorController(IUpdateConnectorHandler updateConnectorHandler)
+		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler)
 		{
 			this.updateConnectorHandler = updateConnectorHandler ?? throw new ArgumentNullException(nameof(updateConnectorHandler));
 		}
@@ -28,7 +28,7 @@ namespace SmartCharging.Api.Controllers
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var result = await updateConnectorHandler.UpdateMaxCurrentAsync(request);
+			var result = await updateConnectorHandler.HandleAsync(request);
 
 			if (!result.IsSuccess)
 			{

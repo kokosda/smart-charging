@@ -1,21 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using SmartCharging.Core.Domain;
+﻿using SmartCharging.Core.Domain;
+using SmartCharging.Core.Interfaces;
+using SmartCharging.Core.ResponseContainers;
+using SmartCharging.Domain.Common;
 using SmartCharging.Domain.Connectors;
+using SmartCharging.Domain.Groups;
+using System;
+using System.Collections.Generic;
 
 namespace SmartCharging.Domain.ChargeStations
 {
 	public sealed class ChargeStation : EntityBase<int>
 	{
+		private List<Connector> connectors;
+
+		public ChargeStation()
+		{
+		}
+
 		public ChargeStation(string name, int groupId)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
 			GroupId = groupId;
-			Connectors = new List<Connector>();
+			connectors = new List<Connector>();
 		}
 
 		public string Name { get; init; }
 		public int GroupId { get; init; }
-		public IList<Connector> Connectors { get; init; }
+		public IReadOnlyList<Connector> Connectors { get => connectors; }
+
+		public static IResponseContainerWithValue<ChargeStation> Create(Group group, string name)
+		{
+			if (group is null)
+				throw new ArgumentNullException(nameof(group));
+
+			var result = new ResponseContainerWithValue<ChargeStation>();
+			var nameSpecificationResponseContainer = new NameSpecification().IsSatisfiedBy(name).Result;
+
+			if (!nameSpecificationResponseContainer.IsSuccess)
+			{
+				nameSpecificationResponseContainer.
+				return result;
+			};
+
+			var result = new ResponseContainerWithValue<ChargeStation>
+			{
+				Value = new ChargeStation(name, group.Id)
+			};
+
+			return result;
+		}
 	}
 }

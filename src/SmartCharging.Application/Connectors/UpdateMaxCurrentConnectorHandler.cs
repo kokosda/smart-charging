@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SmartCharging.Application.Handlers;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Core.ResponseContainers;
 using SmartCharging.Domain.Connectors;
+using SmartCharging.Domain.Groups;
 using SmartCharging.Infrastructure.Logging;
 
 namespace SmartCharging.Application.Connectors
 {
-	public sealed class UpdateConnectorHandler : IUpdateConnectorHandler
+	public sealed class UpdateMaxCurrentConnectorHandler : CommandHandlerBase<UpdateConnectorRequest>, IUpdateMaxCurrentConnectorHandler
 	{
-		private static readonly ILog Log = LogManager.GetLogger(nameof(UpdateConnectorHandler));
+		private static readonly ILog Log = LogManager.GetLogger(nameof(UpdateMaxCurrentConnectorHandler));
 		private readonly IConnectorRepository connectorRepository;
 		private readonly IGroupRepository groupRepository;
 
-		public UpdateConnectorHandler(IConnectorRepository connectorRepository, IGroupRepository groupRepository)
+		public UpdateMaxCurrentConnectorHandler(IConnectorRepository connectorRepository, IGroupRepository groupRepository)
 		{
 			this.connectorRepository = connectorRepository ?? throw new ArgumentNullException(nameof(connectorRepository));
 			this.groupRepository = groupRepository ?? throw new ArgumentNullException(nameof(groupRepository));
 		}
 
-		public async Task<IResponseContainer> UpdateMaxCurrentAsync(UpdateConnectorRequest request)
+		protected override async Task<IResponseContainer> GetResultAsync(UpdateConnectorRequest request)
 		{
-			if (request is null)
-				throw new ArgumentNullException(nameof(request));
-
 			IResponseContainer result = new ResponseContainer();
 			var connector = await connectorRepository.GetByChargeStationIdAndLineNo(request.ChargeStationId, request.LineNo);
 

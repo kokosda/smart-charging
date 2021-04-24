@@ -1,5 +1,6 @@
 ﻿using SmartCharging.Core.Domain;
 using SmartCharging.Core.Interfaces;
+using SmartCharging.Domain.Groups;
 using System.Threading.Tasks;
 
 namespace SmartCharging.Domain.Connectors
