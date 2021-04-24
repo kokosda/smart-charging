@@ -45,6 +45,28 @@ namespace SmartCharging.Api.Controllers
 		/// <summary>
 		/// Updates max current in Amp.
 		/// </summary>
+		[Route("")]
+		[HttpPost]
+		[ProducesResponseType(typeof(ConnectorDto), (int)HttpStatusCode.Created)]
+		public async Task<ActionResult> Create(CreateGroupRequest request)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			var result = await createGroupHandler.HandleWithValueAsync(request);
+
+			if (!result.IsSuccess)
+			{
+				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				return BadRequest(ModelState);
+			}
+
+			return Created($"/{result.Value.Id}", result.Value);
+		}
+
+		/// <summary>
+		/// Updates max current in Amp.
+		/// </summary>
 		[Route("UpdateMaxCurrent")]
 		[HttpPost]
 		[ProducesResponseType((int)HttpStatusCode.NoContent)]
