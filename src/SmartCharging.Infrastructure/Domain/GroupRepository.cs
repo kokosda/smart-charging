@@ -1,8 +1,10 @@
 ﻿using Dapper;
 using SmartCharging.Core.Interfaces;
+using SmartCharging.Domain.ChargeStations;
 using SmartCharging.Domain.Connectors;
 using SmartCharging.Domain.Groups;
 using SmartCharging.Infrastructure.Database;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartCharging.Infrastructure.Domain
@@ -24,9 +26,40 @@ from [Group] AS g
 join [ChargeStation] AS cs on cs.GroupId = g.Id
 join [Connector] AS c on c.ChargeStationId = cs.Id
 where c.{nameof(connector.ChargeStationId)}={connector.ChargeStationId} and c.{nameof(connector.LineNo)}={connector.LineNo};
+
+select cs.*
+from [ChargeStation] AS cs
+where cs.GroupId in (
+	select g.Id 
+	from [Group] AS g 
+	join [ChargeStation] AS cs on cs.GroupId = g.Id
+	where cs.Id = {connector.ChargeStationId}
+);
+
+select c.*
+from [Connector] AS c
+join (
+	select cs.Id
+	from [ChargeStation] AS cs
+	where cs.GroupId in (
+		select g.Id 
+		from [Group] AS g 
+		join [ChargeStation] AS cs on cs.GroupId = g.Id
+		where cs.Id = {connector.ChargeStationId}
+	)
+) AS cs on cs.Id = c.ChargeStationId;
 ";
 
-			var result = await sqlConnectionFactory.GetOpenConnection().QueryFirstOrDefaultAsync<Group>(sql);
+			var multi = await sqlConnectionFactory.GetOpenConnection().QueryMultipleAsync(sql);
+			var result = await multi.ReadSingleAsync<Group>();
+			var chargeStations = (await multi.ReadAsync<ChargeStation>()).ToDictionary(cs => cs.Id, cs => cs);
+			var connectors = await multi.ReadAsync<Connector>();
+
+			result.ChargeStations.AddRange(chargeStations.Values);
+
+			foreach (var c in connectors)
+				chargeStations[c.ChargeStationId].Connectors.Add(c);
+
 			return result;
 		}
 	}

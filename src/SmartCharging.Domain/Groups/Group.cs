@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SmartCharging.Core.Domain;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Core.ResponseContainers;
@@ -8,9 +9,11 @@ namespace SmartCharging.Domain.Groups
 {
 	public sealed class Group : EntityBase<int>
 	{
+		private readonly List<ChargeStation> chargeStations;
+
 		public Group()
 		{
-			ChargeStations = new List<ChargeStation>();
+			chargeStations = new List<ChargeStation>();
 		}
 
 		private Group(string name, decimal capacityInAmps) : this()
@@ -21,7 +24,13 @@ namespace SmartCharging.Domain.Groups
 
 		public string Name { get; init; }
 		public decimal CapacityInAmps { get; init; }
-		public IList<ChargeStation> ChargeStations { get; init; }
+		public List<ChargeStation> ChargeStations => chargeStations;
+
+		public decimal GetOccupiedCapacity()
+		{
+			var result = ChargeStations.SelectMany(cs => cs.Connectors).Sum(c => c.MaxCurrentInAmps);
+			return result;
+		}
 
 		public static IResponseContainerWithValue<Group> Create(string name, decimal capacityInAmps)
 		{

@@ -26,7 +26,7 @@ namespace SmartCharging.Domain.ChargeStations
 
 		public string Name { get; init; }
 		public int GroupId { get; init; }
-		public IReadOnlyList<Connector> Connectors { get => connectors; }
+		public List<Connector> Connectors { get => connectors; }
 
 		public static IResponseContainerWithValue<ChargeStation> Create(Group group, string name)
 		{

@@ -23,7 +23,8 @@ namespace SmartCharging.Domain.Groups
 				throw new ArgumentNullException(nameof(group));
 
 			var result = new ResponseContainer();
-			var isOvercapped = group.CapacityInAmps < (group.CapacityInAmps - connector.MaxCurrentInAmps + current);
+			var occupiedCapacity = group.GetOccupiedCapacity();
+			var isOvercapped = occupiedCapacity < (occupiedCapacity - connector.MaxCurrentInAmps + current);
 
 			if (isOvercapped)
 				result.AddErrorMessage($"Updating connector's [{connector.GetNumericId()}] current will overflow group's [{group.Name}] current capacity {group.CapacityInAmps}.");

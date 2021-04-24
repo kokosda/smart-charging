@@ -41,7 +41,9 @@ namespace SmartCharging.Core.ResponseContainers
 				anotherResponseContainer = new ResponseContainer();
 
 			isSuccess = anotherResponseContainer.IsSuccess;
-			MessagesList.Add(anotherResponseContainer.Messages);
+
+			if (!string.IsNullOrWhiteSpace(anotherResponseContainer.Messages))
+				MessagesList.Add(anotherResponseContainer.Messages);
 
 			return this;
 		}
