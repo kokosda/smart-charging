@@ -2,19 +2,18 @@
 using System.Threading.Tasks;
 using SmartCharging.Core.Interfaces;
 using SmartCharging.Core.ResponseContainers;
-using SmartCharging.Domain.Connectors;
 
 namespace SmartCharging.Domain.Groups
 {
 	public sealed record UpdateGroupCurrentSpecification : ISpecification<Group, int>
 	{
-		private readonly decimal current;
-		private readonly Connector connector;
+		private readonly decimal newMaxCurrentInAmps;
+		private readonly decimal presentedMaxCurrentInAmps;
 
-		public UpdateGroupCurrentSpecification(decimal current, Connector connector)
+		public UpdateGroupCurrentSpecification(decimal newMaxCurrentInAmps, decimal currentMaxCurrentInAmps)
 		{
-			this.current = current;
-			this.connector = connector ?? throw new ArgumentNullException(nameof(connector));
+			this.newMaxCurrentInAmps = newMaxCurrentInAmps;
+			this.presentedMaxCurrentInAmps = currentMaxCurrentInAmps;
 		}
 
 		public Task<IResponseContainer> IsSatisfiedBy(Group group)
@@ -24,10 +23,10 @@ namespace SmartCharging.Domain.Groups
 
 			var result = new ResponseContainer();
 			var occupiedCapacity = group.GetOccupiedCapacity();
-			var isOvercapped = occupiedCapacity < (occupiedCapacity - connector.MaxCurrentInAmps + current);
+			var isOvercapped = group.WillBecomeOvercapped(occupiedCapacity, presentedMaxCurrentInAmps, newMaxCurrentInAmps);
 
 			if (isOvercapped)
-				result.AddErrorMessage($"Updating connector's [{connector.GetNumericId()}] current will overflow group's [{group.Name}] current capacity {group.CapacityInAmps}.");
+				result.AddErrorMessage($"Updating connector's [{presentedMaxCurrentInAmps}] current will overflow group's [{group.Name}] current capacity {group.CapacityInAmps}.");
 
 			return Task.FromResult(result.AsInterface());
 		}

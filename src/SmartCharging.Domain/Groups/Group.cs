@@ -32,6 +32,18 @@ namespace SmartCharging.Domain.Groups
 			return result;
 		}
 
+		public bool WillBecomeOvercapped(decimal occupiedCapacity, decimal presentedMaxCurrentInAmps, decimal newMaxCurrentInAmps)
+		{
+			var result = CapacityInAmps < (occupiedCapacity - presentedMaxCurrentInAmps + newMaxCurrentInAmps);
+			return result;
+		}
+
+		public bool WillBecomeOvercapped(decimal occupiedCapacity, decimal newMaxCurrentInAmps)
+		{
+			var result = CapacityInAmps < (occupiedCapacity + newMaxCurrentInAmps);
+			return result;
+		}
+
 		public static IResponseContainerWithValue<Group> Create(string name, decimal capacityInAmps)
 		{
 			IResponseContainerWithValue<Group> result;

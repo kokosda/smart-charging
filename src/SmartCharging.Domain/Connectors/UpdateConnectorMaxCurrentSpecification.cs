@@ -34,8 +34,8 @@ namespace SmartCharging.Domain.Connectors
 				result.AddErrorMessage($"Connector's [{connector.GetNumericId()}] current can not be a value less than or equal to 0. Value provided: {current}.");
 			else
 			{
-				var group = await groupRepository.GetByConnector(connector);
-				var responseContainer = await new UpdateGroupCurrentSpecification(current, connector).IsSatisfiedBy(group);
+				var group = await groupRepository.GetByConnectorAsync(connector);
+				var responseContainer = await new UpdateGroupCurrentSpecification(current, connector.MaxCurrentInAmps).IsSatisfiedBy(group);
 
 				result.JoinWith(responseContainer);
 			}

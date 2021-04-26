@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartCharging.Application.Connectors;
 using SmartCharging.Application.GeneralRequests;
+using SmartCharging.Application.Groups;
 using SmartCharging.Domain.Connectors;
 
 namespace SmartCharging.Api.Controllers
@@ -13,11 +14,13 @@ namespace SmartCharging.Api.Controllers
 	{
 		private readonly IUpdateMaxCurrentConnectorHandler updateConnectorHandler;
 		private readonly IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler;
+		private readonly ICreateConnectorHandler createConnectorHandler;
 
-		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler, IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler)
+		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler, IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler, ICreateConnectorHandler createConnectorHandler)
 		{
 			this.updateConnectorHandler = updateConnectorHandler;
 			this.getIntIdEntityHandler = getIntIdEntityHandler;
+			this.createConnectorHandler = createConnectorHandler;
 		}
 
 		[Route("{id}")]
@@ -31,7 +34,7 @@ namespace SmartCharging.Api.Controllers
 				Request = request
 			};
 
-			var result = await getIntIdEntityHandler.HandleWithValueAsync(command);
+			var result = await getIntIdEntityHandler.HandleAsync(command);
 
 			if (!result.IsSuccess)
 			{
@@ -48,12 +51,12 @@ namespace SmartCharging.Api.Controllers
 		[Route("")]
 		[HttpPost]
 		[ProducesResponseType(typeof(ConnectorDto), (int)HttpStatusCode.Created)]
-		public async Task<ActionResult> Create(CreateGroupRequest request)
+		public async Task<ActionResult> Create(CreateConnectorRequest request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var result = await createGroupHandler.HandleWithValueAsync(request);
+			var result = await createConnectorHandler.HandleAsync(request);
 
 			if (!result.IsSuccess)
 			{
@@ -61,7 +64,7 @@ namespace SmartCharging.Api.Controllers
 				return BadRequest(ModelState);
 			}
 
-			return Created($"/{result.Value.Id}", result.Value);
+			return Created($"/{result.Value}", result.Value);
 		}
 
 		/// <summary>

@@ -36,7 +36,7 @@ where Id = last_insert_rowid();
 			return result;
 		}
 
-		public async Task<T> GetAsync(TId id)
+		public virtual async Task<T> GetAsync(TId id)
 		{
 			var sql = $"select * from [{typeof(T).Name}] where Id={id}";
 			var result = await factory.GetOpenConnection().QueryFirstOrDefaultAsync<T>(sql);

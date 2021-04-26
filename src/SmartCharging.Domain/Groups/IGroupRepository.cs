@@ -6,6 +6,7 @@ namespace SmartCharging.Domain.Groups
 {
 	public interface IGroupRepository : IGenericRepository<Group, int>
 	{
-		Task<Group> GetByConnector(Connector connector);
+		Task<Group> GetByConnectorAsync(Connector connector);
+		Task<Group> GetByChargeStationIdAsync(int chargeStationId);
 	}
 }

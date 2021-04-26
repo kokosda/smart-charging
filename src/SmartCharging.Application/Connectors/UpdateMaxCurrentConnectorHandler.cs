@@ -24,7 +24,7 @@ namespace SmartCharging.Application.Connectors
 		protected override async Task<IResponseContainer> GetResultAsync(UpdateConnectorRequest request)
 		{
 			IResponseContainer result = new ResponseContainer();
-			var connector = await connectorRepository.GetByChargeStationIdAndLineNo(request.ChargeStationId, request.LineNo);
+			var connector = await connectorRepository.GetByChargeStationIdAndLineNoAsync(request.ChargeStationId, request.LineNo);
 
 			if (connector is null)
 			{

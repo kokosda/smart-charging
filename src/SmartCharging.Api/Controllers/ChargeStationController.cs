@@ -31,7 +31,7 @@ namespace SmartCharging.Api.Controllers
 				Request = request
 			};
 
-			var result = await getIntIdEntityHandler.HandleWithValueAsync(command);
+			var result = await getIntIdEntityHandler.HandleAsync(command);
 
 			if (!result.IsSuccess)
 			{
@@ -53,7 +53,7 @@ namespace SmartCharging.Api.Controllers
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var result = await chargeStationHandler.HandleWithValueAsync(request);
+			var result = await chargeStationHandler.HandleAsync(request);
 
 			if (!result.IsSuccess)
 			{

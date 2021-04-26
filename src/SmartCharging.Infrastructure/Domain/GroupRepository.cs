@@ -6,6 +6,7 @@ using SmartCharging.Domain.Groups;
 using SmartCharging.Infrastructure.Database;
 using System.Linq;
 using System.Threading.Tasks;
+using static Dapper.SqlMapper;
 
 namespace SmartCharging.Infrastructure.Domain
 {
@@ -18,7 +19,62 @@ namespace SmartCharging.Infrastructure.Domain
 			this.sqlConnectionFactory = sqlConnectionFactory;
 		}
 
-		public async Task<Group> GetByConnector(Connector connector)
+		public override async Task<Group> GetAsync(int id)
+		{
+			var sql = @$"
+select g.* 
+from [Group] AS g
+where g.Id={id};
+
+select cs.*
+from [ChargeStation] AS cs
+where cs.GroupId = {id};
+
+select c.*
+from [Connector] AS c
+join [ChargeStation] AS cs
+where cs.GroupId = {id}
+";
+
+			var result = await ComposeGroupFromMultipleQuery(sql);
+			return result;
+		}
+
+		public async Task<Group> GetByChargeStationIdAsync(int chargeStationId)
+		{
+			var sql = $@"
+select g.* 
+from [Group] AS g
+join [ChargeStation] AS cs on cs.GroupId = g.Id
+where cs.Id = {chargeStationId};
+
+select cs.*
+from [ChargeStation] AS cs
+where cs.GroupId in (
+	select g.Id 
+	from [Group] AS g 
+	join [ChargeStation] AS cs on cs.GroupId = g.Id
+	where cs.Id = {chargeStationId}
+);
+
+select c.*
+from [Connector] AS c
+join (
+	select cs.Id
+	from [ChargeStation] AS cs
+	where cs.GroupId in (
+		select g.Id 
+		from [Group] AS g 
+		join [ChargeStation] AS cs on cs.GroupId = g.Id
+		where cs.Id = {chargeStationId}
+	)
+) AS cs on cs.Id = c.ChargeStationId;
+";
+			var result = await sqlConnectionFactory.GetOpenConnection().QuerySingleAsync<Group>(sql);
+			return result;
+		}
+
+		public async Task<Group> GetByConnectorAsync(Connector connector)
 		{
 			var sql = @$"
 select g.* 
@@ -50,6 +106,12 @@ join (
 ) AS cs on cs.Id = c.ChargeStationId;
 ";
 
+			var result = await ComposeGroupFromMultipleQuery(sql);
+			return result;
+		}
+
+		private async Task<Group> ComposeGroupFromMultipleQuery(string sql)
+		{
 			var multi = await sqlConnectionFactory.GetOpenConnection().QueryMultipleAsync(sql);
 			var result = await multi.ReadSingleAsync<Group>();
 			var chargeStations = (await multi.ReadAsync<ChargeStation>()).ToDictionary(cs => cs.Id, cs => cs);

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace SmartCharging.Core.Handlers
 {
-	public interface IGenericCommandHandler<TCommand, TResult> : ICommandHandler<TCommand>
+	public interface IGenericCommandHandler<TCommand, TResult>
 	{
-		Task<IResponseContainerWithValue<TResult>> HandleWithValueAsync(TCommand command);
+		Task<IResponseContainerWithValue<TResult>> HandleAsync(TCommand command);
 	}
 }
