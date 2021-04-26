@@ -9,11 +9,9 @@ namespace SmartCharging.Domain.Groups
 {
 	public sealed class Group : EntityBase<int>
 	{
-		private readonly List<ChargeStation> chargeStations;
-
 		public Group()
 		{
-			chargeStations = new List<ChargeStation>();
+			ChargeStations = new List<ChargeStation>();
 		}
 
 		private Group(string name, decimal capacityInAmps) : this()
@@ -24,7 +22,7 @@ namespace SmartCharging.Domain.Groups
 
 		public string Name { get; init; }
 		public decimal CapacityInAmps { get; init; }
-		public List<ChargeStation> ChargeStations => chargeStations;
+		public List<ChargeStation> ChargeStations { get; }
 
 		public decimal GetOccupiedCapacity()
 		{

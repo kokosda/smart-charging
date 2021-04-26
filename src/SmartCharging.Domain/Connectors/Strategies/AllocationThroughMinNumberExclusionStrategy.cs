@@ -37,6 +37,8 @@ namespace SmartCharging.Domain.Connectors.Strategies
 			if (!group.WillBecomeOvercapped(occupiedCapacity, maxCurrentInAmps))
 				return new ResponseContainerWithValue<IReadOnlyList<CreateConnectorSuggestion>> { Value = suggestions };
 
+			var connectors = await connectorRepository.GetAllInGroupByChargeStationIdAsync(chargeStationId);
+
 			throw new NotImplementedException();
 		}
 	}

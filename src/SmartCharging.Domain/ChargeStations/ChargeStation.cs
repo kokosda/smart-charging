@@ -11,11 +11,9 @@ namespace SmartCharging.Domain.ChargeStations
 {
 	public sealed class ChargeStation : EntityBase<int>
 	{
-		private readonly List<Connector> connectors;
-
 		public ChargeStation()
 		{
-			connectors = new List<Connector>();
+			Connectors = new List<Connector>();
 		}
 
 		private ChargeStation(string name, int groupId) : this()
@@ -26,7 +24,7 @@ namespace SmartCharging.Domain.ChargeStations
 
 		public string Name { get; init; }
 		public int GroupId { get; init; }
-		public List<Connector> Connectors { get => connectors; }
+		public List<Connector> Connectors { get; }
 
 		public static IResponseContainerWithValue<ChargeStation> Create(Group group, string name)
 		{
