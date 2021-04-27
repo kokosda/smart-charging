@@ -6,10 +6,6 @@ namespace SmartCharging.Core.ResponseContainers
 	{
 		public T Value { get; init; }
 
-		public ResponseContainerWithValue()
-		{
-		}
-
 		public new IResponseContainerWithValue<T> JoinWith(IResponseContainer anotherResponseContainer)
 		{
 			base.JoinWith(anotherResponseContainer);

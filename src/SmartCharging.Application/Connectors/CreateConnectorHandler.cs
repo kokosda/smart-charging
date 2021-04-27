@@ -24,11 +24,15 @@ namespace SmartCharging.Application.Connectors
 			if (!factoryResultResponseContainer.IsSuccess)
 				Log.Error(factoryResultResponseContainer.Messages);
 
+			var result = new ResponseContainerWithValue<CreateConnectorResponse>();
 
-			var result = new ResponseContainerWithValue<CreateConnectorResponse>
-			{
-				Value = CreateConnectorResponse.From(factoryResultResponseContainer.Value)
-			};
+			if (factoryResultResponseContainer.Value is not null)
+				result = new ResponseContainerWithValue<CreateConnectorResponse>
+				{
+					Value = CreateConnectorResponse.From(factoryResultResponseContainer.Value)
+				};
+			else
+				result.JoinWith(factoryResultResponseContainer);
 			return result;
 		}
 	}

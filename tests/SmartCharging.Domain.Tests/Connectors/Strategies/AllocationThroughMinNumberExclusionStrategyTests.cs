@@ -136,6 +136,29 @@ namespace SmartCharging.Domain.Tests.Connectors.Strategies
 			Assert.That(result.Messages, Is.Not.Null);
 		}
 
+		[TestCase(TestName = "Exact capacity could not be allocated for the adding connector. Error-contained response returned.")]
+		public void AllocateAsync_NoExactCapacitySuggestionsFound_ReturnsErrorContainedResponse()
+		{
+			// Arrange
+			var chargeStationId = 12;
+			var group = GetGroup4();
+			var connectors = group.ChargeStations.SelectMany(cs => cs.Connectors).OrderByDescending(c => c.MaxCurrentInAmps).ToList();
+
+			groupRepositoryMock.Setup(gr => gr.GetByChargeStationIdAsync(chargeStationId)).Returns(Task.FromResult(group));
+			groupRepositoryMock.Setup(gr => gr.GetByChargeStationIdAsync(chargeStationId)).Returns(Task.FromResult(group));
+			connectorRepositoryMock.Setup(cr => cr.GetAllInGroupByChargeStationIdAsync(chargeStationId))
+				.Returns(Task.FromResult((IReadOnlyList<Connector>)connectors));
+
+			// Act
+			var result = strategy.AllocateAsync(chargeStationId, 3M).Result;
+
+			// Assert
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.Value, Is.Null);
+			Assert.That(result.IsSuccess, Is.False);
+			Assert.That(result.Messages, Is.Not.Null);
+		}
+
 		private Group GetGroup1()
 		{
 			var result = new Group
@@ -220,6 +243,24 @@ namespace SmartCharging.Domain.Tests.Connectors.Strategies
 
 			chargeStation = new ChargeStation { Name = "Frankfurt Audi 3", Id = 3 };
 			chargeStation.Connectors.Add(new Connector { MaxCurrentInAmps = 7, LineNo = 2, ChargeStationId = 3, Id = 11 });
+			result.ChargeStations.Add(chargeStation);
+
+			return result;
+		}
+
+		private Group GetGroup4()
+		{
+			var result = new Group
+			{
+				Id = 7,
+				Name = "Tesla XX Groups 2025",
+				CapacityInAmps = 9
+			};
+
+			var chargeStation = new ChargeStation { Name = "LA Based Tesla 01", Id = 1 };
+			chargeStation.Connectors.Add(new Connector { MaxCurrentInAmps = 5, LineNo = 2, ChargeStationId = 1, Id = 2 });
+			chargeStation.Connectors.Add(new Connector { MaxCurrentInAmps = 2, LineNo = 3, ChargeStationId = 1, Id = 3 });
+			chargeStation.Connectors.Add(new Connector { MaxCurrentInAmps = 2, LineNo = 4, ChargeStationId = 1, Id = 4 });
 			result.ChargeStations.Add(chargeStation);
 
 			return result;

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartCharging.Application.Connectors;
@@ -46,7 +47,8 @@ namespace SmartCharging.Api.Controllers
 		}
 
 		/// <summary>
-		/// Updates max current in Amp.
+		/// Creates connector or returns a list of suggestion of what connectors have to removed from the group to
+		/// free the exact amount of capacity for the connector adding.
 		/// </summary>
 		[Route("")]
 		[HttpPost]
@@ -64,7 +66,10 @@ namespace SmartCharging.Api.Controllers
 				return BadRequest(ModelState);
 			}
 
-			return Created($"/{result.Value}", result.Value);
+			if (result.Value.RemovalSuggestions.Any())
+				return Ok(result.Value.RemovalSuggestions);
+
+			return Created($"/", result.Value.Connector);
 		}
 
 		/// <summary>

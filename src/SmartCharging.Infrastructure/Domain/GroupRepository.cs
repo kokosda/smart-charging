@@ -70,7 +70,7 @@ join (
 	)
 ) AS cs on cs.Id = c.ChargeStationId;
 ";
-			var result = await sqlConnectionFactory.GetOpenConnection().QuerySingleAsync<Group>(sql);
+			var result = await ComposeGroupFromMultipleQuery(sql);
 			return result;
 		}
 

@@ -34,7 +34,7 @@ join (
 	select cs.GroupId
 	from [ChargeStation] cs
 	where cs.Id = {chargeStationId}
-) t on t.Id = cs.GroupId
+) t on t.GroupId = cs.GroupId
 order by c.{nameof(Connector.MaxCurrentInAmps)} desc;
 ";
 			var result = await sqlConnectionFactory.GetOpenConnection().QueryAsync<Connector>(sql);

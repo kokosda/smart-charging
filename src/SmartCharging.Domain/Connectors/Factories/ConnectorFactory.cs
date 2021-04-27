@@ -1,26 +1,23 @@
-﻿using System;
-using System.Threading.Tasks;
-using SmartCharging.Core.Interfaces;
+﻿using SmartCharging.Core.Interfaces;
 using SmartCharging.Core.ResponseContainers;
-using SmartCharging.Domain.ChargeStations;
-using SmartCharging.Domain.Groups;
+using SmartCharging.Domain.Connectors.Strategies;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmartCharging.Domain.Connectors.Factories
 {
 	public sealed class ConnectorFactory : IConnectorFactory
 	{
 		private readonly IConnectorRepository connectorRepository;
-		private readonly IGenericRepository<ChargeStation, int> chargeStationRepository;
-		private readonly IGroupRepository groupRepository;
+		private readonly IConnectorAllocationStrategy connectorAllocationStrategy;
 
 		public ConnectorFactory(
-			IConnectorRepository connectorRepository, 
-			IGenericRepository<ChargeStation, int> chargeStationRepository, 
-			IGroupRepository groupRepository)
+			IConnectorRepository connectorRepository,
+			IConnectorAllocationStrategy connectorAllocationStrategy
+		)
 		{
 			this.connectorRepository = connectorRepository;
-			this.chargeStationRepository = chargeStationRepository;
-			this.groupRepository = groupRepository;
+			this.connectorAllocationStrategy = connectorAllocationStrategy;
 		}
 
 		public async Task<IResponseContainerWithValue<ConnectorFactoryResult>> CreateAsync(int chargeStationId, int lineNo, decimal maxCurrentInAmps)
@@ -30,11 +27,35 @@ namespace SmartCharging.Domain.Connectors.Factories
 
 			if (existingConnector is not null)
 			{
-				result.AddErrorMessage($"There is already a connector exising with charge station ID={chargeStationId} and line #{lineNo}.");
+				result.AddErrorMessage($"There is already a connector existing with charge station ID={chargeStationId} and line #{lineNo}.");
 				return result;
 			}
 
-			var connectors = connectorRepository.GetAllInGroupByChargeStationIdAsync(chargeStationId);
+			var strategyResponseContainer = await connectorAllocationStrategy.AllocateAsync(chargeStationId, maxCurrentInAmps);
+
+			if (!strategyResponseContainer.IsSuccess)
+				return result.JoinWith(strategyResponseContainer);
+
+			Connector connector = null;
+
+			if (!strategyResponseContainer.Value.Any())
+			{
+				connector = new Connector
+				{
+					ChargeStationId = chargeStationId,
+					LineNo = lineNo,
+					MaxCurrentInAmps = maxCurrentInAmps
+				};
+
+				result.AddMessage($"Suggestions are not made. Creating a connector. [{connector}]");
+				connector = await connectorRepository.CreateAsync(connector);
+				result.AddMessage($"Connector created. [{connector}]");
+			}
+
+			result = new ResponseContainerWithValue<ConnectorFactoryResult>
+			{
+				Value = new ConnectorFactoryResult(strategyResponseContainer.Value) {Connector = connector}
+			};
 
 			return result;
 		}

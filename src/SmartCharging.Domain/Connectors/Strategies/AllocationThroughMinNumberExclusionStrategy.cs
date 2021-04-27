@@ -43,9 +43,18 @@ namespace SmartCharging.Domain.Connectors.Strategies
 			var suggestionCombinations = GetIndexesCombinations(suggestions, connectors);
 
 			suggestions.AddRange(suggestionCombinations);
-			createConnectorSuggestions.AddRange(suggestions.Select(s => Suggestion.ToCreateConnectorSuggestion(s, connectors)));
 
-			result = new ResponseContainerWithValue<IReadOnlyList<ConnectorCreationSuggestion>> { Value = createConnectorSuggestions };
+			if (!suggestions.Any())
+			{
+				result = new ResponseContainerWithValue<IReadOnlyList<ConnectorCreationSuggestion>>();
+				result.AddErrorMessage($"No suggestion could be made to free exact amount of space for the {nameof(chargeStationId)}={chargeStationId} and {nameof(maxCurrentInAmps)}={maxCurrentInAmps}.");
+			}
+			else
+			{
+				createConnectorSuggestions.AddRange(suggestions.Select(s => Suggestion.ToCreateConnectorSuggestion(s, connectors)));
+				result = new ResponseContainerWithValue<IReadOnlyList<ConnectorCreationSuggestion>> { Value = createConnectorSuggestions };
+			}
+
 			return result;
 		}
 
