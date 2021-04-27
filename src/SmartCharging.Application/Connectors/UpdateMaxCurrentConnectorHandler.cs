@@ -32,7 +32,7 @@ namespace SmartCharging.Application.Connectors
 				return result;
 			}
 
-			var updateResponseContainer = await connector.UpdateMaxCurrrentInAmps(request.MaxCurrentInAmps, groupRepository);
+			var updateResponseContainer = await connector.UpdateMaxCurrentInAmps(request.MaxCurrentInAmps, groupRepository);
 			result.JoinWith(updateResponseContainer);
 
 			if (result.IsSuccess)

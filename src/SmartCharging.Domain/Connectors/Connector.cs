@@ -17,7 +17,7 @@ namespace SmartCharging.Domain.Connectors
 			init => maxCurrentInAmps = value; 
 		}
 
-		public async Task<IResponseContainer> UpdateMaxCurrrentInAmps(decimal value, IGroupRepository groupRepository)
+		public async Task<IResponseContainer> UpdateMaxCurrentInAmps(decimal value, IGroupRepository groupRepository)
 		{
 			var result = await new UpdateConnectorMaxCurrentSpecification(value, groupRepository).IsSatisfiedBy(this);
 
@@ -31,6 +31,11 @@ namespace SmartCharging.Domain.Connectors
 		{
 			var result = $"{ChargeStationId}-{LineNo}";
 			return result;
+		}
+
+		public override string ToString()
+		{
+			return $"{nameof(MaxCurrentInAmps)}={maxCurrentInAmps} ({nameof(ChargeStationId)}={ChargeStationId}, #{LineNo})";
 		}
 	}
 }

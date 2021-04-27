@@ -7,6 +7,6 @@ namespace SmartCharging.Domain.Connectors.Strategies
 {
 	public interface IConnectorAllocationStrategy
 	{
-		Task<IResponseContainerWithValue<IReadOnlyList<CreateConnectorSuggestion>>> AllocateAsync(int chargeStationId, decimal maxCurrentInAmps);
+		Task<IResponseContainerWithValue<IReadOnlyList<ConnectorCreationSuggestion>>> AllocateAsync(int chargeStationId, decimal maxCurrentInAmps);
 	}
 }

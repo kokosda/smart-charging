@@ -5,14 +5,14 @@ namespace SmartCharging.Domain.Connectors.Factories
 {
 	public sealed record ConnectorFactoryResult : ValueObject
 	{
-		private readonly List<CreateConnectorSuggestion> suggestions;
+		private readonly List<ConnectorCreationSuggestion> suggestions;
 
 		public Connector Connector { get; init; }
-		public IReadOnlyList<CreateConnectorSuggestion> Suggestions { get => suggestions; }
+		public IReadOnlyList<ConnectorCreationSuggestion> Suggestions { get => suggestions; }
 
-		public ConnectorFactoryResult(IEnumerable<CreateConnectorSuggestion> suggestions)
+		public ConnectorFactoryResult(IEnumerable<ConnectorCreationSuggestion> suggestions)
 		{
-			this.suggestions = new List<CreateConnectorSuggestion>(suggestions);
+			this.suggestions = new List<ConnectorCreationSuggestion>(suggestions);
 		}
 	}
 }
