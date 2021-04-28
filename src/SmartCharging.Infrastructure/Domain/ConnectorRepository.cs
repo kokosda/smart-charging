@@ -10,11 +10,8 @@ namespace SmartCharging.Infrastructure.Domain
 {
 	public sealed class ConnectorRepository : GenericRepository<Connector, int>, IConnectorRepository
 	{
-		private readonly ISqlConnectionFactory sqlConnectionFactory;
-
 		public ConnectorRepository(ISqlConnectionFactory sqlConnectionFactory) : base(sqlConnectionFactory)
 		{
-			this.sqlConnectionFactory = sqlConnectionFactory;
 		}
 
 		public async Task<Connector> GetByChargeStationIdAndLineNoAsync(int chargeStationId, int lineNo)
