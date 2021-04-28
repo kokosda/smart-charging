@@ -52,7 +52,7 @@ where Id = last_insert_rowid();
 			await factory.GetOpenConnection().ExecuteAsync(query, entity);
 		}
 
-		public async Task DeleteAsync(TId id)
+		public virtual async Task DeleteAsync(TId id)
 		{
 			var query = $"delete from [{typeof(T).Name}] where Id = @Id";
 			await factory.GetOpenConnection().ExecuteAsync(query);

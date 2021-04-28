@@ -12,11 +12,13 @@ namespace SmartCharging.Api.Controllers
 	public sealed class GroupController : ControllerBase
 	{
 		private readonly ICreateGroupHandler createGroupHandler;
+		private readonly IDeleteGroupHandler deleteGroupHandler;
 		private readonly IGetIntIdEntityHandler<Group, GroupDto> getIntIdEntityHandler;
 
-		public GroupController(ICreateGroupHandler createGroupHandler, IGetIntIdEntityHandler<Group, GroupDto> getIntIdEntityHandler)
+		public GroupController(ICreateGroupHandler createGroupHandler, IDeleteGroupHandler deleteGroupHandler, IGetIntIdEntityHandler<Group, GroupDto> getIntIdEntityHandler)
 		{
 			this.createGroupHandler = createGroupHandler;
+			this.deleteGroupHandler = deleteGroupHandler;
 			this.getIntIdEntityHandler = getIntIdEntityHandler;
 		}
 
@@ -43,7 +45,7 @@ namespace SmartCharging.Api.Controllers
 		}
 
 		/// <summary>
-		/// Updates max current in Amp.
+		/// Creates a group.
 		/// </summary>
 		[Route("")]
 		[HttpPost]
@@ -62,6 +64,24 @@ namespace SmartCharging.Api.Controllers
 			}
 
 			return Created($"/{result.Value.Id}", result.Value);
+		}
+
+		[Route("{id}")]
+		[HttpDelete]
+		public async Task<ActionResult> Delete([FromRoute] DeleteGroupRequest request)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			var result = await deleteGroupHandler.HandleAsync(request);
+
+			if (!result.IsSuccess)
+			{
+				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				return BadRequest(ModelState);
+			}
+
+			return Ok();
 		}
 	}
 }

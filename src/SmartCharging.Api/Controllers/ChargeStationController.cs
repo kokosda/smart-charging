@@ -43,7 +43,7 @@ namespace SmartCharging.Api.Controllers
 		}
 
 		/// <summary>
-		/// Updates max current in Amp.
+		/// Creates charge station in a group.
 		/// </summary>
 		[Route("")]
 		[HttpPost]

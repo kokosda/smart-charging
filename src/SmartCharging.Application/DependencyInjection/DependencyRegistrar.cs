@@ -15,6 +15,7 @@ namespace SmartCharging.Application.DependencyInjection
 			serviceCollection.AddSingleton<IUpdateMaxCurrentConnectorHandler, UpdateMaxCurrentConnectorHandler>();
 			serviceCollection.AddSingleton<ICreateChargeStationHandler, CreateChargeStationHandler>();
 			serviceCollection.AddSingleton<ICreateGroupHandler, CreateGroupHandler>();
+			serviceCollection.AddSingleton<IDeleteGroupHandler, DeleteGroupHandler>();
 			serviceCollection.AddSingleton<ICreateConnectorHandler, CreateConnectorHandler>();
 			serviceCollection.AddSingleton(typeof(IGetIntIdEntityHandler<,>), typeof(GetIntIdEntityHandler<,>));
 			serviceCollection.AddSingleton<IConnectorFactory, ConnectorFactory>();

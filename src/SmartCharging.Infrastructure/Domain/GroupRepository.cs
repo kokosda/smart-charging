@@ -40,6 +40,26 @@ where cs.GroupId = {id}
 			return result;
 		}
 
+		public override async Task DeleteAsync(int id)
+		{
+			var sql = $@"
+delete from [Connector]
+where Id in (
+	select c.Id
+	from [Connector] c
+	inner join [ChargeStation] cs on cs.GroupId = {id}
+);
+
+delete from [ChargeStation]
+where GroupId = {id};
+
+delete from [Group]
+where Id = {id};
+";
+
+			await sqlConnectionFactory.GetOpenConnection().ExecuteAsync(sql);
+		}
+
 		public async Task<Group> GetByChargeStationIdAsync(int chargeStationId)
 		{
 			var sql = $@"

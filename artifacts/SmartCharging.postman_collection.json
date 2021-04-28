@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"ChargeStationId\": 1,\r\n    \"LineNo\": 4,\r\n    \"MaxCurrentInAmps\": 81\r\n}",
+					"raw": "{\r\n    \"ChargeStationId\": 1,\r\n    \"LineNo\": 5,\r\n    \"MaxCurrentInAmps\": 81\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -114,7 +114,7 @@
 			"response": []
 		},
 		{
-			"name": "Group [get]",
+			"name": "Group",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -144,7 +144,34 @@
 			"response": []
 		},
 		{
-			"name": "Connector [get]",
+			"name": "Group",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\": \"Group EV X\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/Group/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"Group",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Connector",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -174,7 +201,7 @@
 			"response": []
 		},
 		{
-			"name": "ChargeStation [get]",
+			"name": "ChargeStation",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
