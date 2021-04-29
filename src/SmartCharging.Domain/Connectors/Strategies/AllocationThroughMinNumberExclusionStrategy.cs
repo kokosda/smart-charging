@@ -51,7 +51,7 @@ namespace SmartCharging.Domain.Connectors.Strategies
 			}
 			else
 			{
-				createConnectorSuggestions.AddRange(suggestions.Select(s => Suggestion.ToCreateConnectorSuggestion(s, connectors)));
+				createConnectorSuggestions.AddRange(suggestions.Select(s => Suggestion.ToConnectorCreationSuggestion(s, connectors)));
 				result = new ResponseContainerWithValue<IReadOnlyList<ConnectorCreationSuggestion>> { Value = createConnectorSuggestions };
 			}
 

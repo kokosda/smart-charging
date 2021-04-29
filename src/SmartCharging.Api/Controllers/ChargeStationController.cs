@@ -35,7 +35,7 @@ namespace SmartCharging.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				ModelState.AddModelError(Constants.ModelState.ErrorsProperty, result.Messages);
 				return BadRequest(ModelState);
 			}
 

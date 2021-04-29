@@ -4,7 +4,7 @@
 	{
 		public static class ModelState
 		{
-			public const string ErrorProperty = "error";
+			public const string ErrorsProperty = "errors";
 		}
 	}
 }

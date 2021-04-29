@@ -54,7 +54,7 @@ where Id = last_insert_rowid();
 
 		public virtual async Task DeleteAsync(TId id)
 		{
-			var query = $"delete from [{typeof(T).Name}] where Id = @Id";
+			var query = $"delete from [{typeof(T).Name}] where Id = {id};";
 			await sqlConnectionFactory.GetOpenConnection().ExecuteAsync(query);
 		}
 

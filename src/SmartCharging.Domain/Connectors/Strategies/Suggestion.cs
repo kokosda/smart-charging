@@ -29,7 +29,7 @@ namespace SmartCharging.Domain.Connectors.Strategies
 			return $"[{string.Join(",", list)}]";
 		}
 
-		public static ConnectorCreationSuggestion ToCreateConnectorSuggestion(Suggestion suggestion, IReadOnlyList<Connector> allConnectors)
+		public static ConnectorCreationSuggestion ToConnectorCreationSuggestion(Suggestion suggestion, IReadOnlyList<Connector> allConnectors)
 		{
 			var connectors = new List<Connector>();
 

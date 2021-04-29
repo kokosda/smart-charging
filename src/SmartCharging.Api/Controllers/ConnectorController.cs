@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmartCharging.Application.Connectors;
 using SmartCharging.Application.GeneralRequests;
-using SmartCharging.Application.Groups;
 using SmartCharging.Domain.Connectors;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SmartCharging.Api.Controllers
 {
@@ -16,12 +15,14 @@ namespace SmartCharging.Api.Controllers
 		private readonly IUpdateMaxCurrentConnectorHandler updateConnectorHandler;
 		private readonly IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler;
 		private readonly ICreateConnectorHandler createConnectorHandler;
+		private readonly IDeleteConnectorHandler deleteConnectorHandler;
 
-		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler, IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler, ICreateConnectorHandler createConnectorHandler)
+		public ConnectorController(IUpdateMaxCurrentConnectorHandler updateConnectorHandler, IGetIntIdEntityHandler<Connector, ConnectorDto> getIntIdEntityHandler, ICreateConnectorHandler createConnectorHandler, IDeleteConnectorHandler deleteConnectorHandler)
 		{
 			this.updateConnectorHandler = updateConnectorHandler;
 			this.getIntIdEntityHandler = getIntIdEntityHandler;
 			this.createConnectorHandler = createConnectorHandler;
+			this.deleteConnectorHandler = deleteConnectorHandler;
 		}
 
 		[Route("{id}")]
@@ -39,7 +40,7 @@ namespace SmartCharging.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				ModelState.AddModelError(Constants.ModelState.ErrorsProperty, result.Messages);
 				return BadRequest(ModelState);
 			}
 
@@ -62,7 +63,7 @@ namespace SmartCharging.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				ModelState.AddModelError(Constants.ModelState.ErrorsProperty, result.Messages);
 				return BadRequest(ModelState);
 			}
 
@@ -87,11 +88,29 @@ namespace SmartCharging.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				ModelState.AddModelError(Constants.ModelState.ErrorProperty, result.Messages);
+				ModelState.AddModelError(Constants.ModelState.ErrorsProperty, result.Messages);
 				return BadRequest(ModelState);
 			}
 
 			return NoContent();
+		}
+
+		[Route("")]
+		[HttpDelete]
+		public async Task<ActionResult> Delete([FromQuery] DeleteConnectorRequest request)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			var result = await deleteConnectorHandler.HandleAsync(request);
+
+			if (!result.IsSuccess)
+			{
+				ModelState.AddModelError(Constants.ModelState.ErrorsProperty, result.Messages);
+				return BadRequest(ModelState);
+			}
+
+			return Ok();
 		}
 	}
 }
