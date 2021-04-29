@@ -218,12 +218,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/Connector/1",
+					"raw": "{{baseUrl}}/ChargeStation/1",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"Connector",
+						"ChargeStation",
 						"1"
 					]
 				}

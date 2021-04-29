@@ -12,11 +12,8 @@ namespace SmartCharging.Infrastructure.Domain
 {
 	public sealed class GroupRepository : GenericRepository<Group, int>, IGroupRepository
 	{
-		private readonly ISqlConnectionFactory sqlConnectionFactory;
-
 		public GroupRepository(ISqlConnectionFactory sqlConnectionFactory) : base(sqlConnectionFactory)
 		{
-			this.sqlConnectionFactory = sqlConnectionFactory;
 		}
 
 		public override async Task<Group> GetAsync(int id)

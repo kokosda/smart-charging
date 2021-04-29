@@ -1,5 +1,6 @@
-﻿using System;
-using SmartCharging.Domain.Groups;
+﻿using SmartCharging.Domain.Groups;
+using System;
+using System.Linq;
 
 namespace SmartCharging.Application.Groups
 {
@@ -8,6 +9,12 @@ namespace SmartCharging.Application.Groups
 		public int Id { get; init; }
 		public string Name { get; init; }
 		public decimal CapacityInAmps { get; set; }
+		public int[] ChargeStationIds { get; set; }
+
+		public GroupDto()
+		{
+			ChargeStationIds = new int[0];
+		}
 
 		public static GroupDto From(Group group)
 		{
@@ -18,7 +25,8 @@ namespace SmartCharging.Application.Groups
 			{
 				Id = group.Id,
 				Name = group.Name,
-				CapacityInAmps = group.CapacityInAmps
+				CapacityInAmps = group.CapacityInAmps,
+				ChargeStationIds = group.ChargeStations.Select(cs => cs.Id).ToArray()
 			};
 			return result;
 		}
