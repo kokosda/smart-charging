@@ -13,11 +13,13 @@ namespace SmartCharging.Api.Controllers
 	{
 		private readonly ICreateChargeStationHandler chargeStationHandler;
 		private readonly IGetIntIdEntityHandler<ChargeStation, ChargeStationDto> getIntIdEntityHandler;
+		private readonly IDeleteChargeStationHandler deleteChargeStationHandler;
 
-		public ChargeStationController(ICreateChargeStationHandler chargeStationHandler, IGetIntIdEntityHandler<ChargeStation, ChargeStationDto> getIntIdEntityHandler)
+		public ChargeStationController(ICreateChargeStationHandler chargeStationHandler, IGetIntIdEntityHandler<ChargeStation, ChargeStationDto> getIntIdEntityHandler, IDeleteChargeStationHandler deleteChargeStationHandler)
 		{
 			this.chargeStationHandler = chargeStationHandler;
 			this.getIntIdEntityHandler = getIntIdEntityHandler;
+			this.deleteChargeStationHandler = deleteChargeStationHandler;
 		}
 
 		[Route("{id}")]
@@ -62,6 +64,24 @@ namespace SmartCharging.Api.Controllers
 			}
 
 			return Created($"/{result.Value.Id}", result.Value);
+		}
+
+		[Route("{id}")]
+		[HttpDelete]
+		public async Task<ActionResult> Delete([FromRoute] DeleteChargeStationRequest request)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			var result = await deleteChargeStationHandler.HandleAsync(request);
+
+			if (!result.IsSuccess)
+			{
+				ModelState.AddModelError(Constants.ModelState.ErrorsProperty, result.Messages);
+				return BadRequest(ModelState);
+			}
+
+			return Ok();
 		}
 	}
 }

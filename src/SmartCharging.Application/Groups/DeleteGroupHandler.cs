@@ -19,11 +19,22 @@ namespace SmartCharging.Application.Groups
 
 		protected override async Task<IResponseContainer> GetResultAsync(DeleteGroupRequest request)
 		{
-			await groupRepository.DeleteAsync(request.Id);
+			var result = new ResponseContainer();
+			var group = await groupRepository.GetAsync(request.Id);
 
-			Log.Info($"Group with ID={request.Id} has been deleted.");
+			if (group is not null)
+			{
+				await groupRepository.DeleteAsync(group.Id);
+				Log.Info($"Group with ID={group.Id} has been deleted.");
+			}
+			else
+			{
+				var message = $"Group with ID={request.Id} is not found.";
+				result.AddErrorMessage(message);
+				Log.Error(message);
+			}
 
-			return new ResponseContainer();
+			return result;
 		}
 	}
 }
